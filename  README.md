@@ -24,7 +24,36 @@ Integrate with your tools
 
  Set up project integrations
 
+命令行指引
+您还可以按照以下说明从计算机中上传现有文件。
 
+
+Git 全局设置
+git config --global user.name "吴群"
+git config --global user.email "wuq@minp.com"
+
+创建一个新仓库
+git clone git@http://gitlab.x86cloud.com.cn:8081/devops/gmwebconsole.git
+cd cpuloadmonitor
+touch README.md
+git add README.md
+git commit -m "add README"
+git push -u origin master
+
+推送现有文件夹
+cd existing_folder
+git init
+git remote add origin git@http://gitlab.x86cloud.com.cn:8081/devops/gmwebconsole.git
+git add .
+git commit -m "Initial commit"
+git push -u origin master
+
+推送现有的 Git 仓库
+cd existing_repo
+git remote rename origin old-origin
+git remote add origin git@http://gitlab.x86cloud.com.cn:8081/devops/gmwebconsole.git
+git push -u origin --all
+git push -u origin --tags
 
 Collaborate with your team
 
