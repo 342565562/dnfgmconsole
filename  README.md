@@ -16,8 +16,14 @@ git remote add origin http://gitlab.x86cloud.com.cn:8081/devops/gmwebconsole.git
 git branch -M main
 git push -uf origin main
 
+想将本地分支重命名为 master
+如果本地默认是 main，但需要与远程 master 分支保持一致：
+bash
+# 1. 将当前分支重命名为 master
+git branch -M main master
 
-Integrate with your tools
+# 2. 推送并重命名后的分支
+git push -u origin master
 
  Set up project integrations
 
