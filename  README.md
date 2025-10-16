@@ -6,7 +6,6 @@ Already a pro? Just edit this README.md and make it your own. Want to make it ea
 
 Add your files
 
-
  Create or upload files
 
  Add files using the command line or push an existing Git repository with the following command:
@@ -18,15 +17,12 @@ git branch -M main
 git push -uf origin main
 
 
-
 Integrate with your tools
-
 
  Set up project integrations
 
 命令行指引
-您还可以按照以下说明从计算机中上传现有文件。
-
+您还可以按照以下说明从计算机中上传现有文件
 
 Git 全局设置
 git config --global user.name "吴群"
