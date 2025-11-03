@@ -92,7 +92,8 @@ const pageQuery = reactive<PageQuery>({
 })
 
 let argQuery = reactive<FilterAccountForm>({
-  uid: ''
+  uid: '',
+  account_name: ''  // 新增字段
 })
 
 const rechargeDialogRef = ref<any>(null)

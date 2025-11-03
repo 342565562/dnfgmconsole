@@ -2,6 +2,7 @@
   <div>
     <panel-title title="点券充值"></panel-title>
 
+    <!-- 只在非游戏账号时显示搜索框 -->
     <filter-account @setParams="toSetParams"></filter-account>
     <account-table ref="accountTableRef"></account-table>
   </div>

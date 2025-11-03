@@ -25,6 +25,7 @@ export type AccountState = {
 }
 export type FilterAccountForm = {
   uid: string
+  account_name?: string  // 新增：玩家账号查询字段
 }
 
 export type RechargeForm = {

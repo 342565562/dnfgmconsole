@@ -19,14 +19,19 @@ type AccountResult struct {
 }
 
 type AccountFilter struct {
-	Uid      string `form:"uid"`
-	HasRoles bool   `form:"has_roles"`
+	Uid         string `form:"uid"`
+	AccountName string `form:"account_name"` // 新增：玩家账号查询字段
+	HasRoles    bool   `form:"has_roles"`
 }
 
 func (q AccountFilter) FilterQuery(dbx *gorm.DB) (tx *gorm.DB) {
 	tx = dbx.Model(&model.Accounts{})
 
-	if q.Uid != "" {
+	if q.AccountName != "" {
+		// 按玩家账号查询（使用 LIKE 支持模糊查询）
+		tx = tx.Where("accountname like ?", db.Like(q.AccountName))
+	} else if q.Uid != "" {
+		// 如果账号名为空，才使用 UID 查询（兼容旧逻辑）
 		// 如果 UID 是纯数字，使用精确匹配；否则使用 LIKE 查询
 		if uidInt, err := strconv.Atoi(q.Uid); err == nil {
 			// 纯数字，使用精确匹配
