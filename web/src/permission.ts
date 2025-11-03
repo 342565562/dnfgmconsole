@@ -38,11 +38,14 @@ export const setupPermissionRouter = (router: Router) => {
 
     try {
       const userInfo = await getUserInfo()
+      if (!userInfo || !userInfo.username) {
+        throw new Error('用户信息无效')
+      }
       userStore.setUserInfo(
         userInfo.username,
-        userInfo.role,
-        userInfo.game_uid,
-        userInfo.is_game_account
+        userInfo.role || 'user',
+        userInfo.game_uid || undefined,
+        userInfo.is_game_account || false
       )
       // generate accessible routes map based on roles
       const menus = [] // menus = ["Apis"] // 此menus 可通過接口獲得
@@ -56,7 +59,7 @@ export const setupPermissionRouter = (router: Router) => {
 
       next({ ...to, replace: true })
     } catch (error) {
-      console.log('err:', error)
+      console.error('获取用户信息失败:', error)
       // remove token and go to login page to re-login
       userStore.removeUserStore()
       next(`/login`)

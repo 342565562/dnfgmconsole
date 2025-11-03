@@ -181,9 +181,14 @@ func LoginResponse(c *gin.Context, code int, token string, expire time.Time) {
 		if err := dbx.Where("accountname = ?", accountName).First(&account).Error; err == nil {
 			info["game_uid"] = account.Uid
 			info["is_game_account"] = true
+		} else {
+			// 如果查询失败，仍然标记为游戏账号，但不设置 UID
+			info["is_game_account"] = true
+			info["game_uid"] = nil
 		}
 	} else {
 		info["is_game_account"] = false
+		info["game_uid"] = nil
 	}
 
 	now := time.Now()

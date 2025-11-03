@@ -115,8 +115,8 @@ export default defineComponent({
           userStore.setUserInfo(
             result.username,
             result.role,
-            result.game_uid,
-            result.is_game_account
+            result.game_uid || undefined,
+            result.is_game_account || false
           )
           loading.value = false
         } catch (e) {

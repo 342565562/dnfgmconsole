@@ -37,13 +37,23 @@ func (u *User) CheckPassword(password string) bool {
 }
 
 func (u *User) GetInfo() map[string]interface{} {
-	return map[string]interface{}{
-		"username":        u.Username,
-		"role":            u.Role,
-		"email":           u.Email,
-		"desc":            u.Desc,
-		"last_login_time": u.LastLoginTime,
+	info := map[string]interface{}{
+		"id":       u.Id,
+		"username": u.Username,
+		"role":     u.Role,
+		"email":    u.Email,
+		"desc":     u.Desc,
+		"time":     u.Time.Format("2006-01-02T15:04:05Z07:00"),
 	}
+	
+	// 处理 last_login_time，可能为 nil
+	if u.LastLoginTime != nil {
+		info["last_login_time"] = u.LastLoginTime.Format("2006-01-02T15:04:05Z07:00")
+	} else {
+		info["last_login_time"] = nil
+	}
+	
+	return info
 }
 
 func init() {

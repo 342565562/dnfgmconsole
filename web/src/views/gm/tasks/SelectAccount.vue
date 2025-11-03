@@ -98,9 +98,12 @@ const selectRoles = async () => {
 }
 
 // hook
-onMounted(() => {
+onMounted(async () => {
+  // 获取账号列表
+  await getAccountsOptions()
+  
   // 如果是游戏账号，自动填充UID
-  if (isGameAccount.value && gameUid.value !== undefined) {
+  if (isGameAccount.value && gameUid.value !== undefined && gameUid.value !== null) {
     form.uid = gameUid.value
     // 自动触发查询
     if (props.enableEventChange) {
@@ -109,11 +112,9 @@ onMounted(() => {
       // 延迟一下，确保账号列表已加载
       setTimeout(() => {
         selectRoles()
-      }, 500)
+      }, 300)
     }
   }
-  // 获取账号列表
-  getAccountsOptions()
 })
 
 const emit = defineEmits(['setUid'])
