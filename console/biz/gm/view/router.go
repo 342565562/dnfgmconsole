@@ -27,6 +27,7 @@ func InitGmRouter(r *ginx.RouterGroup) {
 		roles.PUT("删除邮件", ":id/tasks", updateRoleTasks)
 		roles.POST("删除宠物(清空宠物栏)", ":id/clear_creatures", clearCreatures)
 		roles.POST("删除时装(清空时装栏)", ":id/clear_avatars", clearAvatars)
+		roles.POST("一键恢复", ":id/restore", restoreAccount)
 
 		roles.POST("发送邮件", ":id/email", sendEmail) // id === charac no
 	}

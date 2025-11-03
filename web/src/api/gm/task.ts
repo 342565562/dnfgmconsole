@@ -31,3 +31,11 @@ export const clearAvatars = (characNo: number): Promise<void> => {
     method: 'post'
   })
 }
+
+// 一键恢复功能：同时执行删除邮件、删除宠物、删除时装
+export const restoreAccount = (characNo: number): Promise<void> => {
+  return http.request({
+    url: `/gm/roles/${characNo}/restore`,
+    method: 'post'
+  })
+}

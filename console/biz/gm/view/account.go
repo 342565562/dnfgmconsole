@@ -57,6 +57,14 @@ func clearAvatars(c *gin.Context) {
 	c.Status(204)
 }
 
+// 一键恢复功能：同时执行删除邮件、删除宠物、删除时装
+func restoreAccount(c *gin.Context) {
+	characNo := uv.PPID(c, "id")
+	err := service.RestoreAccount(characNo)
+	uv.PEIf(E_ACCOUNT_DELETE, err)
+	c.Status(204)
+}
+
 func changePassword(c *gin.Context) {
 	args := &service.PasswordReq{}
 	uv.PB(c, args)

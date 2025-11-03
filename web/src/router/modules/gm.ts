@@ -53,6 +53,12 @@ const accountsRoutes: Array<AppRouteRecordRaw> = [
         meta: { title: '删除时装', icon: 'list-rich' }
       },
       {
+        path: 'restore',
+        name: 'GmRestore',
+        component: () => import('@/views/gm/tasks/RestoreAccount.vue'),
+        meta: { title: '一键恢复', icon: 'timer' }
+      },
+      {
         path: 'email',
         name: 'GmEmail',
         component: () => import('@/views/gm/email/index.vue'),
