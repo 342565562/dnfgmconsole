@@ -58,7 +58,7 @@ func getGameMoneyByUid(uid int) (int, int) {
 	}
 
 	var result _R
-	err := dbx.Debug().Table("account_cargo").Where("m_id = ?", uid).Take(&result).Error
+	err := dbx.Table("account_cargo").Where("m_id = ?", uid).Take(&result).Error
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return 0, 0

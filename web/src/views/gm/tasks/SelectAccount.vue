@@ -99,21 +99,31 @@ const selectRoles = async () => {
 
 // hook
 onMounted(async () => {
-  // 获取账号列表
-  await getAccountsOptions()
-  
-  // 如果是游戏账号，自动填充UID
+  // 如果是游戏账号，直接使用固定的 UID，不需要加载所有账号列表
   if (isGameAccount.value && gameUid.value !== undefined && gameUid.value !== null) {
     form.uid = gameUid.value
+    // 创建一个只包含当前账号的选项列表（简化版本，只包含必要字段）
+    options.data = [{
+      uid: gameUid.value,
+      account_name: '',
+      qqq: '',
+      roles: 0,
+      money: 0,
+      capacity: 0,
+      cera_point: 0,
+      cera: 0
+    }]
     // 自动触发查询
     if (props.enableEventChange) {
       emit('setUid', gameUid.value)
     } else {
-      // 延迟一下，确保账号列表已加载
       setTimeout(() => {
         selectRoles()
-      }, 300)
+      }, 100)
     }
+  } else {
+    // 普通用户才加载所有账号列表
+    await getAccountsOptions()
   }
 })
 
