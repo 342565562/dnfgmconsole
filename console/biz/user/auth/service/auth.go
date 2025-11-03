@@ -3,12 +3,17 @@ package service
 import (
 	"console/biz/user/auth/model"
 	m "console/biz/user/users/model"
+	gmModel "console/biz/gm/model"
+	"console/mods/game_db"
+	"crypto/md5"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 	"github.com/localhostjason/webserver/db"
 	"github.com/localhostjason/webserver/server/util/uv"
+	uuid "github.com/satori/go.uuid"
 	"gorm.io/gorm"
 	"net/http"
 	"time"
@@ -45,8 +50,15 @@ func IdHandler(c *gin.Context) interface{} {
 }
 
 type loginArgs struct {
-	Username string `json:"username" binding:"required,alphanum,lte=32"`
+	Username string `json:"username" binding:"required,lte=64"`
 	Password string `json:"password" binding:"required,printascii,lte=128"`
+}
+
+// ToMd5 MD5加密函数
+func ToMd5(str string) string {
+	h := md5.New()
+	h.Write([]byte(str))
+	return hex.EncodeToString(h.Sum(nil))
 }
 
 func Authenticator(c *gin.Context) (interface{}, error) {
@@ -63,17 +75,58 @@ func Authenticator(c *gin.Context) (interface{}, error) {
 	// 直接记录下来， 不管成功与否， 后面看情况使用
 	c.Set(loginFailedKey, &m.User{Username: userName})
 
-	// 密码登录
+	// 1. 首先尝试默认 users 表登录（支持 admin/123）
 	var user m.User
 	err := db.DB.Where("username = ?", userName).First(&user).Error
-	if errors.Is(err, gorm.ErrRecordNotFound) || !user.CheckPassword(password) {
-		return nil, errors.New("用户名或者密码填写不对")
+	if err == nil && user.CheckPassword(password) {
+		// 默认用户登录成功
+		c.Set(currentUserKey, &user)
+		c.Set(currentPassword, password)
+		return &user, nil
 	}
 
-	c.Set(currentUserKey, &user)
-	c.Set(currentPassword, password)
-	return &user, nil
+	// 2. 如果默认 users 表找不到或密码错误，尝试 d_taiwan.accounts 表
+	if errors.Is(err, gorm.ErrRecordNotFound) || !user.CheckPassword(password) {
+		dbx := game_db.DBPools.Get(gmModel.DTaiwan)
+		var account gmModel.Accounts
+		err := dbx.Where("accountname = ? AND password = ?", userName, ToMd5(password)).First(&account).Error
+		
+		if err == nil {
+			// accounts 表登录成功，创建或获取对应的 User 记录
+			// 查找是否已存在对应的用户（使用 game_ 前缀避免与现有用户冲突）
+			gameUsername := fmt.Sprintf("game_%s", userName)
+			var gameUser m.User
+			err = db.DB.Where("username = ?", gameUsername).First(&gameUser).Error
+			
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				// 如果不存在，创建新用户记录
+				gameUser = m.User{
+					Username:     gameUsername,
+					Role:         "user",
+					Email:        "",
+					Desc:         fmt.Sprintf("游戏账号: %s (UID: %d)", userName, account.Uid),
+					Time:         time.Now(),
+					IsSuperAdmin: false,
+					JwtKey:       uuid.NewV4(),
+				}
+				// 设置一个随机密码（实际不会用到，因为验证通过 accounts 表）
+				gameUser.SetPassword(fmt.Sprintf("%s_%d", userName, account.Uid))
+				db.DB.Create(&gameUser)
+			} else {
+				// 如果已存在，更新最后登录时间
+				now := time.Now()
+				gameUser.LastLoginTime = &now
+				db.DB.Save(&gameUser)
+			}
+			
+			c.Set(currentUserKey, &gameUser)
+			c.Set(currentPassword, password)
+			return &gameUser, nil
+		}
+	}
 
+	// 所有验证都失败
+	return nil, errors.New("用户名或者密码填写不对")
 }
 
 func Authorizator(data interface{}, c *gin.Context) bool {

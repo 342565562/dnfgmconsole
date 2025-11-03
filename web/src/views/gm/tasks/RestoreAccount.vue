@@ -3,8 +3,7 @@
     <el-row>
       <div class="console-title clearfix" style="min-height: 50px">
         <div class="pull-left">
-          <h4>一键恢复</h4>
-          <span style="color: #f56c6c; margin-left: 8px;">解决无法登录游戏和网络中断等问题</span>
+          <h4>解决无法登录游戏和网络中断等问题</h4>
         </div>
       </div>
     </el-row>
@@ -26,15 +25,15 @@
 
         <panel-step num="3" title="执行恢复" is-last>
           <div>
+            <el-button type="danger" :disabled="!characNo" @click="doRestore" size="small">
+              一键恢复
+            </el-button>
             <p style="color: #f56c6c; margin-bottom: 12px; font-weight: 500;">
               重新登录生效
             </p>
             <p style="color: #909399; margin-bottom: 12px;">
               解决无法登录游戏和网络中断问题
             </p>
-            <el-button type="danger" :disabled="!characNo" @click="doRestore" size="small">
-              一键恢复
-            </el-button>
           </div>
         </panel-step>
       </div>

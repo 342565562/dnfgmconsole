@@ -33,6 +33,15 @@ const systemRoutes: Array<AppRouteRecordRaw> = [
           icon: 'person'
           // hideTag: true
         }
+      },
+      {
+        path: 'guide',
+        name: 'UserGuide',
+        component: () => import('@/views/user/guide/index.vue'),
+        meta: {
+          title: '操作介绍',
+          icon: 'file'
+        }
       }
     ]
   }
