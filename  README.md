@@ -1,8 +1,14 @@
 gmwebconsole
 
+# 提交
 git add .
 git commit -m "feat: add login function"
 git push 等价于 git push -u origin main
+
+# 下载
+# 或一次性丢弃所有工作区修改（谨慎！）
+git reset --hard
+git pull origin main
 
 
 Getting started

@@ -12,7 +12,6 @@ const accountsRoutes: Array<AppRouteRecordRaw> = [
     },
     redirect: 'accounts',
     children: [
-
       {
         path: 'accounts',
         name: 'GmAccounts',
@@ -29,6 +28,15 @@ const accountsRoutes: Array<AppRouteRecordRaw> = [
         meta: {
           title: '段位胜点',
           icon: 'fork'
+        }
+      },
+      {
+        path: 'email',
+        name: 'GmEmail',
+        component: () => import('@/views/gm/email/index.vue'),
+        meta: {
+          title: '发送邮件',
+          icon: 'transfer'
         }
       },
       {
@@ -57,15 +65,6 @@ const accountsRoutes: Array<AppRouteRecordRaw> = [
         name: 'GmRestore',
         component: () => import('@/views/gm/tasks/RestoreAccount.vue'),
         meta: { title: '一键恢复', icon: 'timer' }
-      },
-      {
-        path: 'email',
-        name: 'GmEmail',
-        component: () => import('@/views/gm/email/index.vue'),
-        meta: {
-          title: '发送邮件',
-          icon: 'transfer'
-        }
       }/*,
       {
         path: 'test',

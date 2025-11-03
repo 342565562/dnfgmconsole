@@ -1,6 +1,13 @@
 <template>
   <div>
-    <panel-title title="一键恢复"></panel-title>
+    <el-row>
+      <div class="console-title clearfix" style="min-height: 50px">
+        <div class="pull-left">
+          <h4>一键恢复</h4>
+          <span style="color: #f56c6c; margin-left: 8px;">解决无法登录游戏和网络中断等问题</span>
+        </div>
+      </div>
+    </el-row>
 
     <div class="tc-step-border">
       <div class="l">
@@ -17,8 +24,11 @@
           ></role-table>
         </panel-step>
 
-        <panel-step num="3" title="执行恢复（切换角色后生效）" is-last>
+        <panel-step num="3" title="执行恢复" is-last>
           <div>
+            <p style="color: #f56c6c; margin-bottom: 12px; font-weight: 500;">
+              重新登录生效
+            </p>
             <p style="color: #909399; margin-bottom: 12px;">
               解决无法登录游戏和网络中断问题
             </p>
@@ -33,7 +43,6 @@
 </template>
 
 <script setup lang="ts">
-import PanelTitle from '@/components/PanelTitle'
 import PanelStep from '@/components/PanelStep'
 import SelectAccount from './SelectAccount'
 import RoleTable from './RoleTable'
@@ -72,5 +81,27 @@ const doRestore = async () => {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.console-title {
+  padding: 16px 0;
+  min-height: 48px;
+}
+
+.pull-left {
+  float: left;
+}
+
+.console-title h4 {
+  display: inline-block;
+  text-indent: 8px;
+  border-left: 2px solid #39f;
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-right: 8px;
+  vertical-align: top;
+  font-weight: 700;
+  color: #555;
+  font-size: 18px;
+}
+</style>
 

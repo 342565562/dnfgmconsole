@@ -7,10 +7,10 @@ const systemRoutes: Array<AppRouteRecordRaw> = [
     name: 'System',
     component: LAYOUT,
     meta: {
-      title: '当前用户',
+      title: '使用说明',
       icon: 'lock'
     },
-    redirect: 'user_list',
+    redirect: 'user_info',
     children: [
       /*
       {
