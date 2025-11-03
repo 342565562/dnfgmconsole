@@ -32,7 +32,7 @@ export const useUserStore = defineStore({
     getGameUid(): number | undefined {
       return this.gameUid || (storageLocal.getItem('gameUid') ? Number(storageLocal.getItem('gameUid')) : undefined)
     },
-    isGameAccount(): boolean {
+    getIsGameAccount(): boolean {
       return this.isGameAccount || storageLocal.getItem('isGameAccount') === 'true'
     }
   },

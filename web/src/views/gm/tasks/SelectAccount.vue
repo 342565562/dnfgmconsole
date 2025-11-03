@@ -58,7 +58,7 @@ const props = defineProps({
 const { hasRole, hasBtn, labelWidth } = toRefs(props)
 
 const userStore = useUserStore()
-const isGameAccount = computed(() => userStore.isGameAccount)
+const isGameAccount = computed(() => userStore.getIsGameAccount)
 const gameUid = computed(() => userStore.getGameUid)
 
 const formRef = ref<FormInstance>()
