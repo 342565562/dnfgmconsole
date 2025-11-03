@@ -6,7 +6,8 @@
           v-model="form.uid"
           @change="changeRoles"
           filterable
-          clearable
+          :clearable="!isGameAccount"
+          :disabled="isGameAccount"
           placeholder="选择账号id"
           :loading="loading"
           loading-text="正在加载账号"
@@ -19,7 +20,7 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item v-if="hasBtn">
+      <el-form-item v-if="hasBtn && !isGameAccount">
         <el-button type="primary" @click="selectRoles" size="small">查询</el-button>
       </el-form-item>
     </el-form>
@@ -27,11 +28,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref, toRefs } from 'vue'
+import { computed, reactive, ref, toRefs, onMounted } from 'vue'
 import { FormInstance, FormRules } from 'element-plus'
 import { AccountOptions, SelectForm } from '@/views/gm/roles/model'
 import { getAccounts } from '@/api/gm/accounts'
 import { validate } from '@/utils/element/form'
+import { useUserStore } from '@/store/modules/user'
 
 // props
 
@@ -54,6 +56,10 @@ const props = defineProps({
   }
 })
 const { hasRole, hasBtn, labelWidth } = toRefs(props)
+
+const userStore = useUserStore()
+const isGameAccount = computed(() => userStore.isGameAccount)
+const gameUid = computed(() => userStore.getGameUid)
 
 const formRef = ref<FormInstance>()
 const form = reactive<SelectForm>({
@@ -92,7 +98,23 @@ const selectRoles = async () => {
 }
 
 // hook
-getAccountsOptions()
+onMounted(() => {
+  // 如果是游戏账号，自动填充UID
+  if (isGameAccount.value && gameUid.value !== undefined) {
+    form.uid = gameUid.value
+    // 自动触发查询
+    if (props.enableEventChange) {
+      emit('setUid', gameUid.value)
+    } else {
+      // 延迟一下，确保账号列表已加载
+      setTimeout(() => {
+        selectRoles()
+      }, 500)
+    }
+  }
+  // 获取账号列表
+  getAccountsOptions()
+})
 
 const emit = defineEmits(['setUid'])
 </script>

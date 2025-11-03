@@ -6,6 +6,8 @@ interface UserState {
   token?: string
   username?: string
   role?: string
+  gameUid?: number
+  isGameAccount?: boolean
 }
 
 export const useUserStore = defineStore({
@@ -13,7 +15,9 @@ export const useUserStore = defineStore({
   state: (): UserState => ({
     token: undefined,
     username: null,
-    role: null
+    role: null,
+    gameUid: undefined,
+    isGameAccount: false
   }),
   getters: {
     getToken(): string {
@@ -24,6 +28,12 @@ export const useUserStore = defineStore({
     },
     getUserRole(): string {
       return this.role
+    },
+    getGameUid(): number | undefined {
+      return this.gameUid || (storageLocal.getItem('gameUid') ? Number(storageLocal.getItem('gameUid')) : undefined)
+    },
+    isGameAccount(): boolean {
+      return this.isGameAccount || storageLocal.getItem('isGameAccount') === 'true'
     }
   },
   actions: {
@@ -31,14 +41,22 @@ export const useUserStore = defineStore({
       this.token = token
       storageLocal.setItem('token', token)
     },
-    setUserInfo(username: string, role: string) {
+    setUserInfo(username: string, role: string, gameUid?: number, isGameAccount?: boolean) {
       this.username = username
       this.role = role
+      this.gameUid = gameUid
+      this.isGameAccount = isGameAccount || false
+      if (gameUid !== undefined) {
+        storageLocal.setItem('gameUid', String(gameUid))
+      }
+      storageLocal.setItem('isGameAccount', String(this.isGameAccount))
     },
     removeUserStore() {
       this.token = ''
       this.username = ''
       this.role = ''
+      this.gameUid = undefined
+      this.isGameAccount = false
       storageLocal.clear()
     }
   }

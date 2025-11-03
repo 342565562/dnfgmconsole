@@ -109,8 +109,15 @@ export default defineComponent({
         loading.value = true
 
         try {
-          const { token } = await login(form)
-          userStore.setToken(token)
+          const result = await login(form)
+          userStore.setToken(result.token)
+          // 设置用户信息，包括游戏账号信息
+          userStore.setUserInfo(
+            result.username,
+            result.role,
+            result.game_uid,
+            result.is_game_account
+          )
           loading.value = false
         } catch (e) {
           console.log(111, e)

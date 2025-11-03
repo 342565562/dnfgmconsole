@@ -6,6 +6,8 @@ export type UserInfo = {
   email: string
   role: string
   desc: string
+  game_uid?: number
+  is_game_account?: boolean
 }
 
 export type EditUserInfo = {
@@ -25,4 +27,6 @@ export type LoginResult = {
   email: string
   role: string
   desc: string
+  game_uid?: number
+  is_game_account?: boolean
 }

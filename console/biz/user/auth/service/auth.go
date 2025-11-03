@@ -16,6 +16,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 	"gorm.io/gorm"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -167,8 +168,23 @@ func LoginResponse(c *gin.Context, code int, token string, expire time.Time) {
 	user := u.(*m.User)
 
 	info := user.GetInfo()
-
 	info["token"] = token
+
+	// 如果是游戏账号，查询并返回 UID
+	if strings.HasPrefix(user.Username, "game_") {
+		// 从用户名中提取账号名（去掉 game_ 前缀）
+		accountName := strings.TrimPrefix(user.Username, "game_")
+		
+		// 查询 accounts 表获取 UID
+		dbx := game_db.DBPools.Get(gmModel.DTaiwan)
+		var account gmModel.Accounts
+		if err := dbx.Where("accountname = ?", accountName).First(&account).Error; err == nil {
+			info["game_uid"] = account.Uid
+			info["is_game_account"] = true
+		}
+	} else {
+		info["is_game_account"] = false
+	}
 
 	now := time.Now()
 	user.LastLoginTime = &now
