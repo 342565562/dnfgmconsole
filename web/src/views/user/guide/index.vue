@@ -5,14 +5,17 @@
     <el-row>
       <el-col :span="18">
         <div class="guide-content">
-          <div class="guide-section">
+         
             <div class="guide-link">
               <a href="https://docs.qq.com/doc/DTHJzVUZVbGZ4Z1R3" target="_blank" rel="noopener noreferrer">
-                图文操作介绍，请点此链接
+                图文操作介绍，请点此链接(新手点击)
               </a>
             </div>
+
+
+            <div class="guide-section">
             <h3>1.后台刷一切</h3>
-            <p>可以充值点券和胜点和刷道具、装备、武器、材料、宠物、任务物品</p>
+            <p>可以充值点券和胜点和刷道具、装备、武器、材料、宠物、任务物品，充值胜点后需要切换角色或重新登录才生效！</p>
           </div>
 
 
@@ -24,13 +27,13 @@
 
             <h3>3.举例说明</h3>
             <div class="guide-example">
-              <p><strong>天空套：</strong>搜索关键字"稀有"，出现天空套盒子代码，然后通过邮件发送</p>
+              <p><strong>天空套：</strong>搜索关键字"稀有"，出现天空套盒子代码。搜索关键字"强化券"，出现各种强化券代码。然后通过邮件发送</p>
             </div>
           </div>
 
           <div class="guide-section">
             <h3>4.转职和觉醒</h3>
-            <p>转职和觉醒无需做任务可直接发送相关道具，需要在后台物品代码中搜索关键字"转职"和"觉醒"</p>
+            <p>转职和觉醒无需做任务可直接发送相关道具，需要在后台物品代码中搜索关键字 "转职" 和 "觉醒"</p>
           </div>
 
 
@@ -42,6 +45,7 @@
 
           <div class="guide-section">
             <h3>6.网络中断问题处理</h3>
+            <p>执行完毕以下操作，需要切换角色后生效！</p>
             <ul class="guide-list">
               <li>如果遇到点击角色网络中断，刷普通道具要在后台执行<strong>删除邮件</strong></li>
               <li>刷了宠物之后网络中断就去后台执行<strong>删除宠物</strong></li>
