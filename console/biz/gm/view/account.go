@@ -1,7 +1,12 @@
 package view
 
 import (
+	"console/biz/gm/model"
 	"console/biz/gm/service"
+	roleService "console/biz/user/role/service"
+	"console/mods/game_db"
+	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/localhostjason/webserver/server/util/uv"
@@ -10,6 +15,22 @@ import (
 func getAccounts(c *gin.Context) {
 	var pi, order, q = &uv.PagingIn{}, &uv.Order{}, &service.AccountFilter{}
 	uv.PQ(c, pi, order, q)
+	
+	// 如果是游戏账号登录，只查询当前用户的 UID
+	currentUser := roleService.GetCurrentUser(c)
+	if currentUser != nil && strings.HasPrefix(currentUser.Username, "game_") {
+		// 从用户名中提取账号名（去掉 game_ 前缀）
+		accountName := strings.TrimPrefix(currentUser.Username, "game_")
+		
+		// 查询 accounts 表获取 UID
+		dbx := game_db.DBPools.Get(model.DTaiwan)
+		var account model.Accounts
+		if err := dbx.Where("accountname = ?", accountName).First(&account).Error; err == nil {
+			// 设置 UID 精确匹配（不使用 LIKE）
+			q.Uid = strconv.Itoa(account.Uid)
+		}
+	}
+	
 	lst, po, err := service.GetAccounts(q, pi, order)
 	uv.PEIf(E_ACCOUNT_GET, err)
 

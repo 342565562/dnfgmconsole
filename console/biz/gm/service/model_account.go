@@ -2,6 +2,7 @@ package service
 
 import (
 	"console/biz/gm/model"
+	"strconv"
 
 	"github.com/localhostjason/webserver/db"
 	"gorm.io/gorm"
@@ -26,7 +27,14 @@ func (q AccountFilter) FilterQuery(dbx *gorm.DB) (tx *gorm.DB) {
 	tx = dbx.Model(&model.Accounts{})
 
 	if q.Uid != "" {
-		tx = tx.Where("UID like ?", db.Like(q.Uid))
+		// 如果 UID 是纯数字，使用精确匹配；否则使用 LIKE 查询
+		if uidInt, err := strconv.Atoi(q.Uid); err == nil {
+			// 纯数字，使用精确匹配
+			tx = tx.Where("UID = ?", uidInt)
+		} else {
+			// 包含非数字字符，使用 LIKE 查询（兼容旧逻辑）
+			tx = tx.Where("UID like ?", db.Like(q.Uid))
+		}
 	}
 	return
 }
