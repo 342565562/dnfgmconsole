@@ -32,6 +32,18 @@ export const setupPermissionRouter = (router: Router) => {
     }
 
     if (username) {
+      // 检查路由是否已经生成，如果没有则重新生成
+      const addRouters = permissionStore.getPermissionAddRouters
+      if (!addRouters || addRouters.length === 0) {
+        // 路由未生成，需要重新生成
+        const menus = [] // menus = ["Apis"] // 此menus 可通過接口獲得
+        const accessRoutes = permissionStore.generateRoutes(menus)
+        // dynamically add accessible routes
+        resetRouter()
+        accessRoutes.forEach(val => {
+          router.addRoute(val)
+        })
+      }
       next()
       return
     }
