@@ -89,7 +89,7 @@ const formRef = ref<FormInstance>()
 
 const form = reactive<Email & { mail_type?: string }>({
   code: null,
-  number: 0,
+  number: null,
   seperate_upgrade: 0,
   upgrade: 0,
   is_amplify: false,
@@ -104,8 +104,10 @@ const form = reactive<Email & { mail_type?: string }>({
 
 const rules = reactive<FormRules>({
   code: [{ type: 'integer', min: 0, message: '请输入物品代码', trigger: 'blur' }],
-  number: [{ required: true, message: '请输入数量', trigger: 'blur' }],
-  upgrade: [{ type: 'integer', min: 0, max: 31, message: '强化/增幅等级在0至31', trigger: 'blur' }]
+  number: [
+    { required: true, message: '请输入数量', trigger: 'blur' },
+    { type: 'number', min: 1, message: '数量必须大于0', trigger: 'blur' }
+  ]
 })
 
 const characNo = ref<number>(null)
