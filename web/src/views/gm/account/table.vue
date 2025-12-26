@@ -30,7 +30,7 @@
             <span v-else>-</span>
           </template>
         </el-table-column>
-        <el-table-column prop="qq" label="QQ" />
+        <el-table-column prop="qq" label="QQ" width="150" />
         <el-table-column label="操作" align="right" width="300px">
           <template #default="scope">
             <el-button type="primary" link @click="recharge(scope.row)" size="small">充值</el-button>
