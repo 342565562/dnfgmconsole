@@ -34,7 +34,7 @@
         <el-card class="box-card">
           <template #header>
             <div class="card-header">
-              <span>邮件类型一定要选择正确!!导致网络中断需要在后台执行删除 宠物/时装 操作！</span>
+              <span>邮件类型一定要选择正确!!导致网络中断需要在后台执行“一键恢复”操作！</span>
             </div>
           </template>
           <div>

@@ -1,12 +1,15 @@
 <template>
   <div>
     <el-table v-loading="loading" :data="data" ref="tableRef" border>
-      <el-table-column width="50" label="#" align="center">
+      <el-table-column width="50" align="center">
+        <template #header>
+          <span style="color: red;">请勾选</span>
+        </template>
         <template #default="scope">
           <el-radio v-model="characNo" :label="scope.row.charac_no" class="radio" @change="selectCharacNo"></el-radio>
         </template>
       </el-table-column>
-      <el-table-column prop="charac_no" label="角色编号" width="180" />
+      <el-table-column prop="charac_no" label="角色ID" width="180" />
       <el-table-column prop="charac_name" label="角色名称" width="180"></el-table-column>
       <el-table-column prop="create_time" label="创建时间" width="180">
         <template #default="scope">
