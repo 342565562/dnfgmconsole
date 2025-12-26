@@ -1,10 +1,7 @@
 <template>
   <div>
     <el-table v-loading="loading" :data="data" ref="tableRef" border>
-      <el-table-column width="50" align="center">
-        <template #header>
-          <span style="color: red;">请勾选</span>
-        </template>
+      <el-table-column width="80" label="请勾选" align="center" class-name="select-column">
         <template #default="scope">
           <el-radio v-model="characNo" :label="scope.row.charac_no" class="radio" @change="selectCharacNo"></el-radio>
         </template>
@@ -58,4 +55,28 @@ defineExpose({
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+:deep(.select-column .cell) {
+  white-space: nowrap;
+  min-width: 80px;
+  width: 80px;
+}
+
+/* 单选按钮圆圈线条颜色改为绿色 */
+:deep(.select-column .el-radio__inner) {
+  border-color: #67c23a;
+}
+
+:deep(.select-column .el-radio__input:hover .el-radio__inner) {
+  border-color: #67c23a;
+}
+
+:deep(.select-column .el-radio__input.is-checked .el-radio__inner) {
+  border-color: #67c23a;
+  background-color: #67c23a;
+}
+
+:deep(.select-column .el-radio__input.is-checked .el-radio__inner::after) {
+  background-color: #fff;
+}
+</style>
