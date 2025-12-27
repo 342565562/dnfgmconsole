@@ -62,6 +62,11 @@ defineExpose({
   width: 80px;
 }
 
+/* 请勾选表头文字设置为红色 */
+:deep(.select-column.is-leaf .cell) {
+  color: #f56c6c;
+}
+
 /* 单选按钮圆圈线条颜色改为绿色 */
 :deep(.select-column .el-radio__inner) {
   border-color: #67c23a;
