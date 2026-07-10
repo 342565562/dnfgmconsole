@@ -22,7 +22,7 @@
           >
             <div class="title-container">
               <h3 class="title">
-                <span>金华DNF</span>
+                <span>{{ siteName }}</span>
               </h3>
             </div>
 
@@ -82,10 +82,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue'
+import { defineComponent, onMounted, reactive, ref } from 'vue'
 import { FormInstance, FormRules } from 'element-plus'
 import { useRouter } from 'vue-router'
 import { getUserInfo, login } from '@/api/user/auth'
+import { getSiteConfig } from '@/api/site'
 import { ElNotification } from 'element-plus'
 import { useUserStore } from '@/store/modules/user'
 import { Avatar, Unlock, User } from '@element-plus/icons-vue'
@@ -114,6 +115,18 @@ export default defineComponent({
     const loading = ref<boolean>(false)
     const isAutoFocus = ref<boolean>(true)
     const showActivationCode = ref<boolean>(false)
+
+    // 站点/登录名(可在 server.json 的 site.login_name 配置)
+    const siteName = ref<string>('金华DNF')
+    onMounted(async () => {
+      try {
+        const site = await getSiteConfig()
+        if (site?.login_name) siteName.value = site.login_name
+        if (site?.title) document.title = site.title
+      } catch (e) {
+        // 忽略，使用默认
+      }
+    })
 
     const handleLogin = async (formEl: FormInstance | undefined) => {
       if (!formEl) return
@@ -168,6 +181,7 @@ export default defineComponent({
       loading,
       isAutoFocus,
       showActivationCode,
+      siteName,
       handleLogin,
       Avatar,
       Unlock,

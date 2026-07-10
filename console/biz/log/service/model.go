@@ -16,6 +16,8 @@ func (q RechargeQ) FilterQuery(dbx *gorm.DB) (tx *gorm.DB) {
 	if q.Uid != "" {
 		tx = tx.Where("uid like ?", db.Like(q.Uid))
 	}
+	// 默认最新在前(主键倒序，走主键索引，数据量大也快)
+	tx = tx.Order("id desc")
 	return
 }
 
@@ -29,5 +31,7 @@ func (q OperateQ) FilterQuery(dbx *gorm.DB) (tx *gorm.DB) {
 	if q.Action != "" {
 		tx = tx.Where("action like ?", db.Like(q.Action))
 	}
+	// 默认最新在前
+	tx = tx.Order("id desc")
 	return
 }

@@ -2,7 +2,7 @@
   <div class="dashboard-container">
     <div class="dash-panel">
       <dash-header></dash-header>
-      <dash-body></dash-body>
+      <dash-guide></dash-guide>
       <dash-foot></dash-foot>
     </div>
   </div>
@@ -10,7 +10,7 @@
 
 <script setup lang="ts">
 import DashHeader from './components/DashHeader'
-import DashBody from './components/DashBody'
+import DashGuide from './components/DashGuide'
 import DashFoot from './components/DashFoot'
 </script>
 

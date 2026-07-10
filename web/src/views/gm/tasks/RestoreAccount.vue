@@ -49,7 +49,6 @@ import { reactive, ref } from 'vue'
 import { RoleState } from '@/views/gm/roles/model'
 import { getRoles } from '@/api/gm/role'
 import { restoreAccount } from '@/api/gm/task'
-import { confirmWarning } from '@/utils/element/messageBox'
 import { successMessage } from '@/utils/element/message'
 
 const state = reactive<RoleState>({ data: [], loading: false })
@@ -74,9 +73,8 @@ const setCharacNo = (id: number) => {
 
 const doRestore = async () => {
   if (!characNo.value) return
-  await confirmWarning('确认执行一键恢复？将同时删除邮件、宠物和时装（切换角色后生效）')
   await restoreAccount(characNo.value)
-  successMessage('执行成功，已恢复！切换角色后生效')
+  successMessage('已经恢复成功，切换角色/重新登录后生效')
 }
 </script>
 

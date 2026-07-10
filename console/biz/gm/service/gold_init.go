@@ -74,6 +74,11 @@ func (gf *GoldFile) Read() []model.Gold {
 }
 
 func (gf *GoldFile) WriteDB() error {
+	// 确保 gold 表存在(不存在才建)，兼容 -i 初始化流程
+	if err := model.EnsureGoldTable(); err != nil {
+		return err
+	}
+
 	data := gf.Read()
 	dbx := game_db.DBPools.Get(model.TaiwanCain2nd)
 

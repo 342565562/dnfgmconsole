@@ -37,11 +37,11 @@
 <script setup lang="ts">
 import { nextTick, reactive, ref, defineExpose, defineEmits } from 'vue'
 import { FormInstance, FormRules } from 'element-plus'
+import { ElMessage } from 'element-plus'
 import { QpForm } from '@/views/gm/roles/model/qp'
 import { Role } from '@/views/gm/roles/model'
 import { validate } from '@/utils/element/form'
 import { updatePvpByRole, updateQPbyRole } from '@/api/gm/role'
-import { successMessage } from '@/utils/element/message'
 import { PvpForm } from '@/views/gm/roles/model/pvp'
 import { setFormData } from '@/utils'
 
@@ -81,7 +81,14 @@ const updateRolePvp = async () => {
 
   try {
     await updatePvpByRole(characNo, form)
-    successMessage('更新成功')
+    ElMessage({
+      type: 'success',
+      dangerouslyUseHTMLString: true,
+      duration: 5000,
+      message:
+        '<div style="text-align:center;font-weight:600">修改成功</div>' +
+        '<div>请切换角色或者进入PKC刷新段位</div>'
+    })
     dialog.visible = false
     emit('reloadRoles')
   } catch (e) {

@@ -1,0 +1,1 @@
+"use strict";(self["webpackChunkvue3_template"]=self["webpackChunkvue3_template"]||[]).push([[128],{2128:function(e,t,u){u.r(t),u.d(t,{getSiteConfig:function(){return s}});var n=u(5463);const s=()=>n.d.request({url:"/site-config",method:"get"})}}]);

@@ -1,6 +1,7 @@
 package cmds
 
 import (
+	"dnf/biz/gm/model"
 	"dnf/biz/view"
 	"dnf/mods/casbinx"
 	"dnf/mods/game_db"
@@ -77,6 +78,11 @@ func startServer(toConsole bool) (*server.Server, error) {
 		}
 
 		if err = game_db.Migrate(); err != nil {
+			log.Fatalln(err)
+		}
+
+		// gold 表：不存在才创建(latin1 库中文列用 utf8mb4 避免乱码)，已存在则跳过
+		if err = model.EnsureGoldTable(); err != nil {
 			log.Fatalln(err)
 		}
 	}

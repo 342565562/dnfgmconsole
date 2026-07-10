@@ -69,6 +69,7 @@ import { AccountDetail, RechargeForm } from '@/views/gm/account/model/model'
 import { assignWith } from 'lodash'
 import { rechargeByUid } from '@/api/gm/accounts'
 import { successMessage } from '@/utils/element/message'
+import { validate } from '@/utils/element/form'
 import { setFormData } from '@/utils'
 
 const dialog = reactive({
@@ -101,11 +102,20 @@ const data = reactive<Info>({
 })
 
 const rules = reactive<FormRules>({
-  cera: [{ type: 'integer', min: 0, message: '点券不能少于0', trigger: 'blur' }],
-  cera_point: [{ type: 'integer', min: 0, message: 'D点不能少于0', trigger: 'blur' }]
+  cera: [
+    { type: 'integer', min: 0, message: '点券不能少于0', trigger: 'blur' },
+    { type: 'integer', max: 5000000, message: '单次充值不超过500万', trigger: 'blur' }
+  ],
+  cera_point: [
+    { type: 'integer', min: 0, message: 'D点不能少于0', trigger: 'blur' },
+    { type: 'integer', max: 5000000, message: '单次充值不超过500万', trigger: 'blur' }
+  ]
 })
 
 const rechargeAccount = async () => {
+  const valid = await validate(formRef)
+  if (!valid) return
+
   let number
   if (form.cera_option === 'cera_point') {
     number = form.cera_point

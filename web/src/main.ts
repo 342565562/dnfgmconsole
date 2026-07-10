@@ -43,5 +43,14 @@ import './styles/index.scss'
   // load svg组件
   app.component('svg-icon', SvgIcon)
 
+  // 读取站点标题(失败不阻塞启动)
+  try {
+    const { getSiteConfig } = await import('./api/site')
+    const site = await getSiteConfig()
+    if (site?.title) document.title = site.title
+  } catch (e) {
+    // 忽略，使用默认标题
+  }
+
   app.mount('#app', true)
 })()

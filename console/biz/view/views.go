@@ -27,6 +27,9 @@ func SetView(r *gin.Engine) error {
 	static.AddStaticToRouter(r)
 	r.Use(middleware.OperateHandler)
 
+	// 公开接口(免鉴权)：站点标题/登录名，供登录页读取
+	r.GET("api/site-config", getSiteConfig)
+
 	apiAuth := r.Group("api/auth")
 	api := r.Group("api")
 

@@ -45,7 +45,7 @@ const appStore = useAppStore()
 const { sidebar, device } = storeToRefs(appStore)
 const router = useRouter()
 
-const username = userStore.username
+const username = (userStore.username || '').replace(/^game_/, 'GM')
 
 // 退出登录
 const handlerLogout = async (): Promise<void> => {

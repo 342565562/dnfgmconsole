@@ -8,9 +8,33 @@ import (
 	"github.com/localhostjason/webserver/server/util/uv"
 )
 
+// GetGoldCategoryByCode 按物品代码查 gold 表分类；查不到或无库连接返回普通
+func GetGoldCategoryByCode(code int) int {
+	dbx := game_db.DBPools.Get(model.TaiwanCain2nd)
+	if dbx == nil {
+		return model.CategoryNormal
+	}
+	var g model.Gold
+	if err := dbx.Select("category").Where("code = ?", code).Order("id asc").First(&g).Error; err != nil {
+		return model.CategoryNormal
+	}
+	return g.Category
+}
+
 // SendEmail 插入 2条记录 letter postal
 func SendEmail(characNo int, email *Email) error {
 	dbx := game_db.DBPools.Get(model.TaiwanCain2nd)
+
+	// 自动分类：前端未明确选择时装/宠物(即普通)时，依据 gold 表分类自动转换邮件类型；
+	// 若前端已明确选择时装或宠物，则尊重前端选择，不覆盖。
+	if !email.AvataFlag && !email.CreatureFlag {
+		switch GetGoldCategoryByCode(email.Code) {
+		case model.CategoryAvata:
+			email.AvataFlag = true
+		case model.CategoryCreature:
+			email.CreatureFlag = true
+		}
+	}
 
 	err := dbx.Table("letter").Create(map[string]interface{}{
 		"charac_no":        characNo,

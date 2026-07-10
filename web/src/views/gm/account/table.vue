@@ -4,45 +4,36 @@
       <span style="font-size: 12px; color: #409eff;">UID与帐号对应关系</span>
     </el-row>
     <el-row>
-      <el-table v-loading="state.loading" :data="state.data" ref="tableRef" border fit>
-        <el-table-column prop="uid" label="玩家uid" width="120" />
-        <el-table-column prop="account_name" label="玩家账号" width="150" />
-        <el-table-column prop="roles" label="角色总数" width="100">
+      <el-table v-loading="state.loading" :data="state.data" ref="tableRef" border style="width: 100%">
+        <el-table-column prop="uid" label="玩家uid" min-width="110" />
+        <el-table-column prop="account_name" label="玩家账号" min-width="140" />
+        <el-table-column prop="roles" label="角色总数" min-width="90">
           <template #default="scope">
             <span>{{ scope.row.roles }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="cera_point" label="D点" width="120">
+        <el-table-column prop="cera_point" label="D点" min-width="110">
           <template #default="scope">
             <span v-if="scope.row.cera_point">{{ formatPrice(scope.row.cera_point) }}</span>
             <span v-else>-</span>
           </template>
         </el-table-column>
-        <el-table-column prop="cera" label="点券" width="120">
+        <el-table-column prop="cera" label="点券" min-width="110">
           <template #default="scope">
             <span v-if="scope.row.cera">{{ formatPrice(scope.row.cera) }}</span>
             <span v-else>-</span>
           </template>
         </el-table-column>
-        <el-table-column prop="money" label="账号金库存款" width="150">
+        <el-table-column prop="money" label="账号金库存款" min-width="130">
           <template #default="scope">
             <span v-if="scope.row.money">{{ formatPrice(scope.row.money) }}</span>
             <span v-else>-</span>
           </template>
         </el-table-column>
-        <el-table-column prop="qq" label="QQ" width="140" />
-        <el-table-column label="操作" align="left" width="300px">
+        <el-table-column prop="qq" label="QQ" min-width="110" />
+        <el-table-column label="操作" align="center" width="100">
           <template #default="scope">
             <el-button type="primary" link @click="recharge(scope.row)" size="small">充值</el-button>
-<!-- 下面的按钮已被注释掉 -->
-            <!--
-            <el-button type="primary" link @click="resetCreateCharacHandler(scope.row)" size="small"
-              >重置创建角色
-            </el-button>
-            <el-button type="primary" link @click="editAccount(scope.row)" size="small">编辑</el-button>
-            <el-button type="primary" link @click="updatePwd(scope.row)" size="small">修改密码</el-button>
-            <el-button type="primary" link @click="deleteAccountHandler(scope.row)" size="small">删除</el-button>
-            -->          
           </template>
         </el-table-column>
       </el-table>

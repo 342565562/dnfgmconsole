@@ -51,6 +51,8 @@ require (
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible // indirect
 	github.com/lestrrat-go/strftime v1.0.6 // indirect
+	github.com/lxn/walk v0.0.0-20210112085537-c389da54e794 // indirect
+	github.com/lxn/win v0.0.0-20210218163916-a377121e959e // indirect
 	github.com/mattn/go-isatty v0.0.17 // indirect
 	github.com/mattn/go-sqlite3 v1.14.15 // indirect
 	github.com/microsoft/go-mssqldb v0.17.0 // indirect
@@ -69,6 +71,7 @@ require (
 	google.golang.org/genproto v0.0.0-20230110181048-76db0878b65f // indirect
 	google.golang.org/grpc v1.53.0 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
+	gopkg.in/Knetic/govaluate.v3 v3.0.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	gorm.io/driver/postgres v1.4.4 // indirect
 	gorm.io/driver/sqlite v1.4.4 // indirect

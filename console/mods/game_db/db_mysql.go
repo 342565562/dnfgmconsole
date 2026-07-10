@@ -6,6 +6,7 @@ import (
 	"fmt"
 	log "github.com/sirupsen/logrus"
 	"sync"
+	"time"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -89,6 +90,14 @@ func connectMysqlOne(c MysqlDBConfig) error {
 
 	if err != nil {
 		return errors.New(fmt.Sprintf("failed to connect databse %s:%v", dsn, err))
+	}
+
+	// 连接池优化：远程库 + 约20并发，保持空闲连接以避免弱网下反复握手的延迟
+	if sqlDB, e := db.DB(); e == nil {
+		sqlDB.SetMaxOpenConns(20)                  // 单库最大连接数
+		sqlDB.SetMaxIdleConns(8)                   // 保持的空闲连接
+		sqlDB.SetConnMaxLifetime(time.Hour)        // 连接最长存活，规避服务端超时断开
+		sqlDB.SetConnMaxIdleTime(10 * time.Minute) // 空闲回收
 	}
 
 	DBPools.Add(c.Key, db)

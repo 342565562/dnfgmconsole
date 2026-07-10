@@ -1,0 +1,55 @@
+// ============================================================================
+// server.json 配置说明(本文件为带注释的示例；标准 JSON 不支持注释，
+// 请勿直接使用本文件，实际配置请复制到 config/server.json 并去掉所有注释)
+// ============================================================================
+{
+  // 接口相关
+  "api": {
+    "cors": true                       // 是否开启跨域(前后端分离/调试时用 true)
+  },
+
+  // 站点信息(前端展示，免登录即可获取)
+  "site": {
+    "title": "金华DNF",                // 浏览器标签页标题
+    "login_name": "金华DNF"            // 登录页显示的名称
+  },
+
+  // 登录鉴权
+  "auth": {
+    "realm": "test zone",              // JWT realm
+    "secret": "f450a7bdbde3416d22474b9fdc2a3636", // JWT 签名密钥(生产请修改)
+    "id_key": "username",              // 身份字段
+    "timeout": 43200,                  // token 有效期(秒)
+    "max_refresh": 3600,               // token 可刷新时长(秒)
+    "activation_code_enable": 0        // 后台激活码功能：0=关闭(默认) 1=开启
+  },
+
+  // 游戏数据库(多库)。charset 建议 utf8；timeout 为连接超时(秒)。
+  // 省略的字段(multi_statements/debug)默认为 false。
+  "game_db": {
+    "enable": true,                    // 是否启用数据库
+    "mysql": [
+      // key/db 一般相同；webserver 库存放后台用户与日志
+      { "key": "d_taiwan",        "db": "d_taiwan",        "user": "game", "password": "改我", "host": "127.0.0.1", "port": 3306, "charset": "utf8", "timeout": 5 },
+      { "key": "taiwan_cain",     "db": "taiwan_cain",     "user": "game", "password": "改我", "host": "127.0.0.1", "port": 3306, "charset": "utf8", "timeout": 5 },
+      { "key": "taiwan_cain_2nd", "db": "taiwan_cain_2nd", "user": "game", "password": "改我", "host": "127.0.0.1", "port": 3306, "charset": "utf8", "timeout": 5 }, // gold 表所在库
+      { "key": "taiwan_billing",  "db": "taiwan_billing",  "user": "game", "password": "改我", "host": "127.0.0.1", "port": 3306, "charset": "utf8", "timeout": 5 },
+      { "key": "taiwan_login",    "db": "taiwan_login",    "user": "game", "password": "改我", "host": "127.0.0.1", "port": 3306, "charset": "utf8", "timeout": 5 },
+      { "key": "webserver",       "db": "webserver",       "user": "game", "password": "改我", "host": "127.0.0.1", "port": 3306, "charset": "utf8", "timeout": 5 }
+    ]
+  },
+
+  // 服务(守护/日志文件名)
+  "service": {
+    "pid_file": "console.pid",         // pid 文件
+    "daemon_log": "daemon.log"         // 守护日志
+  },
+
+  // 物品分类规则(供导入工具写入 gold.category；修改后需重新导入生效)
+  "item_classify": {
+    "pet_types": ["creature", "creature expitem", "feed"],          // 归为“宠物”的道具原始种类
+    "fashion_types": ["disguise", "disguise random", "dye"],        // 归为“时装”的道具原始种类
+    "fashion_rarity_keyword": "时装"                                 // 装备稀有度含此关键字即判为“时装”
+    // 其余(含徽章、各类礼包、装备、未知/新类型)一律归“普通”
+  }
+}

@@ -46,7 +46,8 @@ const username = ref<string>('')
 onBeforeMount(async () => {
   const data = await getUserInfo()
   form.desc = data.desc
-  username.value = data.username
+  // 游戏账号名 game_xxx 显示为 GMxxx
+  username.value = (data.username || '').replace(/^game_/, 'GM')
 })
 
 const saveUserInfo = async () => {

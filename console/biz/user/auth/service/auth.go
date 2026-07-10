@@ -79,6 +79,10 @@ func Authenticator(c *gin.Context) (interface{}, error) {
 	password := loginValues.Password
 	activationCode := loginValues.ActivationCode
 
+	// 读取激活码功能开关：0=关闭（无需激活码），1=开启
+	authCfg, _ := model.GetConfig()
+	activationEnabled := authCfg.ActivationCodeEnable == 1
+
 	c.Set(operateKey, uv.OP(I_OP_LOGIN, userName))
 
 	// 直接记录下来， 不管成功与否， 后面看情况使用
@@ -94,8 +98,8 @@ func Authenticator(c *gin.Context) (interface{}, error) {
 	var user m.User
 	err := dbx.Where("username = ?", userName).First(&user).Error
 	if err == nil && user.CheckPassword(password) {
-		// 检查用户是否已激活
-		if !user.IsActivated {
+		// 检查用户是否已激活（激活码功能关闭时跳过）
+		if activationEnabled && !user.IsActivated {
 			// 未激活，需要验证激活码
 			if activationCode == "" {
 				return nil, errors.New("该账号未激活，请输入激活码")
@@ -164,8 +168,8 @@ func Authenticator(c *gin.Context) (interface{}, error) {
 				dbx.Save(&gameUser)
 			}
 			
-			// 检查游戏账号是否已激活
-			if !gameUser.IsActivated {
+			// 检查游戏账号是否已激活（激活码功能关闭时跳过）
+			if activationEnabled && !gameUser.IsActivated {
 				// 未激活，需要验证激活码
 				if activationCode == "" {
 					return nil, errors.New("该账号未激活，请输入激活码")

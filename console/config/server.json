@@ -2,92 +2,36 @@
   "api": {
     "cors": true
   },
+  "site": {
+    "title": "金华DNF",
+    "login_name": "金华DNF"
+  },
   "auth": {
     "realm": "test zone",
     "secret": "f450a7bdbde3416d22474b9fdc2a3636",
     "id_key": "username",
     "timeout": 43200,
-    "max_refresh": 3600
+    "max_refresh": 3600,
+    "activation_code_enable": 0
   },
   "game_db": {
     "enable": true,
     "mysql": [
-      {
-        "key": "d_taiwan",
-        "user": "game",
-        "password": "GKhGNc6vtKERHEfiX5GW",
-        "host": "123.56.165.124",
-        "port": 3306,
-        "db": "d_taiwan",
-        "charset": "utf8",
-        "timeout": 5,
-        "multi_statements": false,
-        "debug": false
-      },
-      {
-        "key": "taiwan_cain",
-        "user": "game",
-        "password": "GKhGNc6vtKERHEfiX5GW",
-        "host": "123.56.165.124",
-        "port": 3306,
-        "db": "taiwan_cain",
-        "charset": "utf8",
-        "timeout": 5,
-        "multi_statements": false,
-        "debug": false
-      },
-      {
-        "key": "taiwan_cain_2nd",
-        "user": "game",
-        "password": "GKhGNc6vtKERHEfiX5GW",
-        "host": "123.56.165.124",
-        "port": 3306,
-        "db": "taiwan_cain_2nd",
-        "charset": "utf8",
-        "timeout": 5,
-        "multi_statements": false,
-        "debug": false
-      },
-      {
-        "key": "taiwan_billing",
-        "user": "game",
-        "password": "GKhGNc6vtKERHEfiX5GW",
-        "host": "123.56.165.124",
-        "port": 3306,
-        "db": "taiwan_billing",
-        "charset": "utf8",
-        "timeout": 5,
-        "multi_statements": false,
-        "debug": false
-      },
-      {
-        "key": "taiwan_login",
-        "user": "game",
-        "password": "GKhGNc6vtKERHEfiX5GW",
-        "host": "123.56.165.124",
-        "port": 3306,
-        "db": "taiwan_login",
-        "charset": "utf8",
-        "timeout": 5,
-        "multi_statements": false,
-        "debug": false
-      },
-      {
-        "key": "webserver",
-        "user": "game",
-        "password": "GKhGNc6vtKERHEfiX5GW",
-        "host": "123.56.165.124",
-        "port": 3306,
-        "db": "webserver",
-        "charset": "utf8",
-        "timeout": 5,
-        "multi_statements": false,
-        "debug": false
-      }
+      { "key": "d_taiwan", "db": "d_taiwan", "user": "game", "password": "uu5!^%jg", "host": "192.168.200.131", "port": 3306, "charset": "utf8", "timeout": 5 },
+      { "key": "taiwan_cain", "db": "taiwan_cain", "user": "game", "password": "uu5!^%jg", "host": "192.168.200.131", "port": 3306, "charset": "utf8", "timeout": 5 },
+      { "key": "taiwan_cain_2nd", "db": "taiwan_cain_2nd", "user": "game", "password": "uu5!^%jg", "host": "192.168.200.131", "port": 3306, "charset": "utf8", "timeout": 5 },
+      { "key": "taiwan_billing", "db": "taiwan_billing", "user": "game", "password": "uu5!^%jg", "host": "192.168.200.131", "port": 3306, "charset": "utf8", "timeout": 5 },
+      { "key": "taiwan_login", "db": "taiwan_login", "user": "game", "password": "uu5!^%jg", "host": "192.168.200.131", "port": 3306, "charset": "utf8", "timeout": 5 },
+      { "key": "webserver", "db": "webserver", "user": "game", "password": "uu5!^%jg", "host": "192.168.200.131", "port": 3306, "charset": "utf8", "timeout": 5 }
     ]
   },
   "service": {
     "pid_file": "console.pid",
     "daemon_log": "daemon.log"
+  },
+  "item_classify": {
+    "pet_types": ["creature", "creature expitem", "feed"],
+    "fashion_types": ["disguise", "disguise random", "dye"],
+    "fashion_rarity_keyword": "时装"
   }
 }
