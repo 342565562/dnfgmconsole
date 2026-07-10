@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	roleService "console/biz/user/role/service"
-	"console/mods/casbinx"
+	roleService "dnf/biz/user/role/service"
+	"dnf/mods/casbinx"
 	"github.com/gin-gonic/gin"
 )
 

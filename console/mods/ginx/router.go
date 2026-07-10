@@ -1,8 +1,9 @@
 package ginx
 
 import (
+	"dnf/biz/gm/model"
+	"dnf/mods/game_db"
 	"github.com/gin-gonic/gin"
-	"github.com/localhostjason/webserver/db"
 	"net/http"
 	"path"
 )
@@ -57,12 +58,17 @@ func (r *RouterGroup) authzHandler(name string, groupName string, relativePath s
 	if groupName == "" || method == "" {
 		return
 	}
+	dbx := game_db.DBPools.Get(model.WebServer)
+	if dbx == nil {
+		return
+	}
+
 	var authz []Authz
 	url := path.Join(route.BasePath(), relativePath)
 	z := Authz{GroupName: groupName, ApiName: name, Url: url, Method: method}
-	db.DB.Limit(1).Find(&authz, z)
+	dbx.Limit(1).Find(&authz, z)
 
 	if len(authz) == 0 {
-		db.DB.Create(&z)
+		dbx.Create(&z)
 	}
 }

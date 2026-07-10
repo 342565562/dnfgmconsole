@@ -37,6 +37,40 @@ func ConnectWithMysqlConfig(cfgs []MysqlDBConfig) error {
 }
 
 func connectMysqlOne(c MysqlDBConfig) error {
+	// 先连接到MySQL服务器（不指定数据库）以检查数据库是否存在
+	serverDSN := fmt.Sprintf("%s:%s@tcp(%s:%d)/?charset=%s&parseTime=True&loc=Local&timeout=%ds",
+		c.User, c.Password, c.Host, c.Port, c.Charset, c.Timeout)
+	serverDB, err := gorm.Open(mysql.Open(serverDSN), &gorm.Config{})
+	if err != nil {
+		return errors.New(fmt.Sprintf("failed to connect to MySQL server %s:%d: %v", c.Host, c.Port, err))
+	}
+
+	// 检查数据库是否存在（COUNT 返回数字，可正确 Scan 到 int）
+	var count int
+	err = serverDB.Raw("SELECT COUNT(*) FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?", c.DB).Scan(&count).Error
+	if err != nil {
+		serverDB = nil
+		return errors.New(fmt.Sprintf("failed to check database existence: %v", err))
+	}
+
+	// 如果数据库不存在，创建它（使用配置中的字符集）
+	if count == 0 {
+		createSQL := fmt.Sprintf("CREATE DATABASE IF NOT EXISTS `%s` DEFAULT CHARACTER SET %s", c.DB, c.Charset)
+		err = serverDB.Exec(createSQL).Error
+		if err != nil {
+			serverDB = nil
+			return errors.New(fmt.Sprintf("failed to create database %s: %v", c.DB, err))
+		}
+		log.Infof("Database %s created successfully", c.DB)
+	}
+
+	// 关闭服务器连接
+	sqlDB, _ := serverDB.DB()
+	if sqlDB != nil {
+		sqlDB.Close()
+	}
+
+	// 连接到指定的数据库
 	multiStatements := "false"
 	if c.MultiStatements {
 		multiStatements = "true"

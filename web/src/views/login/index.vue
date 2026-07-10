@@ -55,6 +55,17 @@
               </span>
             </el-form-item>
 
+            <el-form-item prop="activationCode" v-if="showActivationCode">
+              <el-input
+                v-model="form.activationCode"
+                placeholder="请输入激活码"
+                name="activationCode"
+                auto-complete="off"
+                size="large"
+                @keyup.enter.native="handleLogin(loginForm)"
+              ></el-input>
+            </el-form-item>
+
             <el-button
               :loading="loading"
               type="primary"
@@ -88,18 +99,21 @@ export default defineComponent({
 
     const form = reactive<Login>({
       username: '',
-      password: ''
+      password: '',
+      activationCode: ''
     })
 
     const rules = reactive<FormRules>({
       username: [{ required: true, trigger: 'blur', message: '请输入账号' }],
-      password: [{ required: true, trigger: 'blur', message: '请输入密码' }]
+      password: [{ required: true, trigger: 'blur', message: '请输入密码' }],
+      activationCode: [{ required: false, trigger: 'blur', message: '请输入激活码' }]
     })
     const loginForm = ref<FormInstance>()
 
     const passwordType = ref<string>('password')
     const loading = ref<boolean>(false)
     const isAutoFocus = ref<boolean>(true)
+    const showActivationCode = ref<boolean>(false)
 
     const handleLogin = async (formEl: FormInstance | undefined) => {
       if (!formEl) return
@@ -119,8 +133,13 @@ export default defineComponent({
             result.is_game_account || false
           )
           loading.value = false
-        } catch (e) {
+          showActivationCode.value = false
+        } catch (e: any) {
           console.log(111, e)
+          // 如果错误提示需要激活码，显示激活码输入框
+          if (e?.response?.data?.msg && e.response.data.msg.includes('激活码')) {
+            showActivationCode.value = true
+          }
           loading.value = false
           return
         }
@@ -148,6 +167,7 @@ export default defineComponent({
       passwordType,
       loading,
       isAutoFocus,
+      showActivationCode,
       handleLogin,
       Avatar,
       Unlock,

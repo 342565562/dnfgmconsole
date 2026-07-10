@@ -1,7 +1,7 @@
 package service
 
 import (
-	"console/biz/log/model"
+	"dnf/biz/log/model"
 	"github.com/localhostjason/webserver/db"
 	"gorm.io/gorm"
 )

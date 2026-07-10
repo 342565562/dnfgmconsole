@@ -1,5 +1,10 @@
 package casbinx
 
+import (
+	"dnf/biz/gm/model"
+	"dnf/mods/game_db"
+)
+
 type CasbinRule struct {
 	ID        uint   `json:"id" gorm:"primaryKey;autoIncrement"`
 	PType     string `json:"p_type" gorm:"column:ptype" description:"策略类型"`
@@ -14,4 +19,8 @@ type CasbinRule struct {
 	ApiName   string `json:"api_name" gorm:"-"`
 	GroupName string `json:"group_name" gorm:"-"`
 	Desc      string `json:"desc" description:"策略描述"`
+}
+
+func init() {
+	game_db.RegTables(model.WebServer, &CasbinRule{})
 }

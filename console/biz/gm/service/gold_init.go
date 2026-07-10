@@ -2,9 +2,9 @@ package service
 
 import (
 	"bufio"
-	"console/biz/gm/model"
-	"console/mods/game_db"
-	"console/mods/pathx"
+	"dnf/biz/gm/model"
+	"dnf/mods/game_db"
+	"dnf/mods/pathx"
 	"fmt"
 	"github.com/localhostjason/webserver/util"
 	"io"

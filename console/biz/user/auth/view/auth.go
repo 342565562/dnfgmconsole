@@ -1,8 +1,8 @@
 package view
 
 import (
-	"console/biz/user/auth/model"
-	"console/biz/user/auth/service"
+	"dnf/biz/user/auth/model"
+	"dnf/biz/user/auth/service"
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 	"time"

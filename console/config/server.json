@@ -71,6 +71,18 @@
         "timeout": 5,
         "multi_statements": false,
         "debug": false
+      },
+      {
+        "key": "webserver",
+        "user": "game",
+        "password": "GKhGNc6vtKERHEfiX5GW",
+        "host": "123.56.165.124",
+        "port": 3306,
+        "db": "webserver",
+        "charset": "utf8",
+        "timeout": 5,
+        "multi_statements": false,
+        "debug": false
       }
     ]
   },

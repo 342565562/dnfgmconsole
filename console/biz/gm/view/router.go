@@ -1,6 +1,6 @@
 package view
 
-import "console/mods/ginx"
+import "dnf/mods/ginx"
 
 func InitGmRouter(r *ginx.RouterGroup) {
 

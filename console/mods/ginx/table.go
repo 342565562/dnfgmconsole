@@ -1,6 +1,9 @@
 package ginx
 
-import "github.com/localhostjason/webserver/db"
+import (
+	"dnf/biz/gm/model"
+	"dnf/mods/game_db"
+)
 
 type Authz struct {
 	ID        int    `json:"id"`
@@ -11,5 +14,5 @@ type Authz struct {
 }
 
 func init() {
-	db.RegTables(&Authz{})
+	game_db.RegTables(model.WebServer, &Authz{})
 }

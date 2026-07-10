@@ -1,7 +1,7 @@
 package view
 
 import (
-	"console/biz/middleware"
+	"dnf/biz/middleware"
 	"github.com/localhostjason/webserver/server/util/ue"
 )
 

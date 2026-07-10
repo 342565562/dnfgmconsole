@@ -1,9 +1,11 @@
 package casbinx
 
 import (
+	"dnf/biz/gm/model"
+	"dnf/mods/game_db"
+	"errors"
 	"github.com/casbin/casbin/v2"
 	gormadapter "github.com/casbin/gorm-adapter/v3"
-	"github.com/localhostjason/webserver/db"
 	"github.com/localhostjason/webserver/util"
 )
 
@@ -23,7 +25,11 @@ func (c *CasBin) Run() error {
 		createCasbinConfigFile(c.File)
 	}
 
-	dbx := db.DB
+	dbx := game_db.DBPools.Get(model.WebServer)
+	if dbx == nil {
+		return errors.New("webserver database not connected")
+	}
+
 	adapter, err := gormadapter.NewAdapterByDBWithCustomTable(dbx, &CasbinRule{})
 
 	var enforcer *casbin.Enforcer

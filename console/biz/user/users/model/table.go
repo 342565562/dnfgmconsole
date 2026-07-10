@@ -1,7 +1,8 @@
 package model
 
 import (
-	"github.com/localhostjason/webserver/db"
+	"dnf/biz/gm/model"
+	"dnf/mods/game_db"
 	uuid "github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
 	"time"
@@ -21,6 +22,7 @@ type User struct {
 	Desc  string `json:"desc" gorm:"type:string;size:256"`
 
 	IsSuperAdmin bool `json:"is_super_admin"`
+	IsActivated  bool `json:"is_activated" gorm:"default:false"` // 是否已激活
 }
 
 func (u *User) SetPassword(password string) {
@@ -57,5 +59,5 @@ func (u *User) GetInfo() map[string]interface{} {
 }
 
 func init() {
-	db.RegTables(&User{})
+	game_db.RegTables(model.WebServer, &User{})
 }

@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"console/biz/log/model"
+	"dnf/biz/log/model"
 	"github.com/gin-gonic/gin"
 	"github.com/localhostjason/webserver/server/util/ue"
 )

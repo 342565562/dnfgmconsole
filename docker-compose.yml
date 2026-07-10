@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  gmwebconsole:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: gmwebconsole:latest
+    container_name: gmwebconsole
+    restart: unless-stopped
+
+    ports:
+      - "8080:8080"
+
+    volumes:
+      # 挂载配置文件 (可在宿主机修改配置)
+      - ./console/dist/config/server.json:/app/config/server.json
+      # 挂载日志目录
+      - ./console/dist/log:/app/log
+      # 挂载数据目录
+      - ./console/dist/data:/app/data
+
+    environment:
+      - TZ=Asia/Shanghai
+
+    networks:
+      - gmwebconsole-network
+
+    # 健康检查 (可选)
+    # healthcheck:
+    #   test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3
+    #   start_period: 40s
+
+networks:
+  gmwebconsole-network:
+    driver: bridge

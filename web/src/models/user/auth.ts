@@ -17,6 +17,7 @@ export type EditUserInfo = {
 export type Login = {
   username: string
   password: string
+  activationCode?: string
 }
 
 export type LoginResult = {

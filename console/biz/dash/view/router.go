@@ -1,6 +1,6 @@
 package view
 
-import "console/mods/ginx"
+import "dnf/mods/ginx"
 
 func InitDashRouter(r *ginx.RouterGroup) {
 	r.GET("获取首页统计", "stat/count", getDashStatCount)

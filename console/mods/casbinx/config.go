@@ -1,7 +1,7 @@
 package casbinx
 
 import (
-	"console/mods/pathx"
+	"dnf/mods/pathx"
 	"github.com/localhostjason/webserver/server/config"
 	"os"
 	"path/filepath"

@@ -1,11 +1,10 @@
 package cmds
 
 import (
-	"console/biz/view"
-	"console/mods/casbinx"
-	"console/mods/game_db"
+	"dnf/biz/view"
+	"dnf/mods/casbinx"
+	"dnf/mods/game_db"
 	"errors"
-	"github.com/localhostjason/webserver/db"
 	"github.com/localhostjason/webserver/server"
 	"github.com/localhostjason/webserver/svc"
 
@@ -62,14 +61,15 @@ func startServer(toConsole bool) (*server.Server, error) {
 		log.Fatalln("failed to set log:", err)
 	}
 
-	if db.DBEnable() {
-		if err = db.Connect(); err != nil {
-			log.Fatalln(err)
-		}
-		if err = db.Migrate(); err != nil {
-			log.Fatalln(err)
-		}
-	}
+	// webserver/db已迁移到game_db，不再需要初始化
+	// if db.DBEnable() {
+	// 	if err = db.Connect(); err != nil {
+	// 		log.Fatalln(err)
+	// 	}
+	// 	if err = db.Migrate(); err != nil {
+	// 		log.Fatalln(err)
+	// 	}
+	// }
 
 	if game_db.DBEnable() {
 		if err = game_db.Connect(); err != nil {

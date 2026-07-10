@@ -1,12 +1,13 @@
 package service
 
 import (
-	jwtService "console/biz/user/auth/service"
-	"console/biz/user/users/model"
-	"console/mods/casbinx"
+	gmModel "dnf/biz/gm/model"
+	jwtService "dnf/biz/user/auth/service"
+	"dnf/biz/user/users/model"
+	"dnf/mods/casbinx"
+	"dnf/mods/game_db"
 	"errors"
 	"github.com/gin-gonic/gin"
-	"github.com/localhostjason/webserver/db"
 	"gorm.io/gorm"
 )
 
@@ -23,8 +24,13 @@ func UpdateRoleDesc(id int, desc string) error {
 		return err
 	}
 
+	dbx := game_db.DBPools.Get(gmModel.WebServer)
+	if dbx == nil {
+		return errors.New("webserver database not connected")
+	}
+
 	policy.Desc = desc
-	return db.DB.Save(policy).Error
+	return dbx.Save(policy).Error
 }
 
 func UpdateRole(id int, role, path, method string) error {
@@ -60,8 +66,13 @@ func DeleteRole(id int) error {
 }
 
 func checkPolicyInDb(id int) (*casbinx.CasbinRule, error) {
+	dbx := game_db.DBPools.Get(gmModel.WebServer)
+	if dbx == nil {
+		return nil, errors.New("webserver database not connected")
+	}
+
 	var rule casbinx.CasbinRule
-	err := db.DB.First(&rule, &casbinx.CasbinRule{ID: uint(id)}).Error
+	err := dbx.First(&rule, &casbinx.CasbinRule{ID: uint(id)}).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return &rule, errors.New("未找到策略")
 	}

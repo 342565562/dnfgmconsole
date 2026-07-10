@@ -1,18 +1,18 @@
 package view
 
 import (
-	client "console/biz/client/view"
-	dash "console/biz/dash/view"
-	gm "console/biz/gm/view"
-	log "console/biz/log/view"
-	"console/biz/middleware"
-	"console/biz/static"
-	"console/biz/user"
-	auth "console/biz/user/auth/view"
-	"console/mods/ginx"
+	client "dnf/biz/client/view"
+	dash "dnf/biz/dash/view"
+	gm "dnf/biz/gm/view"
+	log "dnf/biz/log/view"
+	"dnf/biz/middleware"
+	"dnf/biz/static"
+	"dnf/biz/user"
+	auth "dnf/biz/user/auth/view"
+	"dnf/mods/ginx"
 	"github.com/gin-gonic/gin"
 
-	_ "console/biz/user/users/service"
+	_ "dnf/biz/user/users/service"
 )
 
 func SetView(r *gin.Engine) error {

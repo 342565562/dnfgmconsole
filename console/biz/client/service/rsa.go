@@ -1,7 +1,7 @@
 package service
 
 import (
-	"console/mods/pathx"
+	"dnf/mods/pathx"
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/x509"

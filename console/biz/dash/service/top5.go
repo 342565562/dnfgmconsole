@@ -1,10 +1,9 @@
 package service
 
 import (
-	"console/biz/gm/model"
-	logModel "console/biz/log/model"
-	"console/mods/game_db"
-	"github.com/localhostjason/webserver/db"
+	"dnf/biz/gm/model"
+	logModel "dnf/biz/log/model"
+	"dnf/mods/game_db"
 )
 
 func GetRechargeTop5() StatTop5Result {
@@ -17,8 +16,13 @@ func GetRechargeTop5() StatTop5Result {
 }
 
 func getRechargeTop5ByType(typ string) []TopInfo {
+	dbx := game_db.DBPools.Get(model.WebServer)
+	if dbx == nil {
+		return make([]TopInfo, 0)
+	}
+
 	var data []TopInfo
-	tx := db.DB.Model(&logModel.RechargeLog{}).Select("sum(number) as total, uid").Group("action, uid").Order("total desc").Limit(5)
+	tx := dbx.Model(&logModel.RechargeLog{}).Select("sum(number) as total, uid").Group("action, uid").Order("total desc").Limit(5)
 
 	if typ == "cera" {
 		tx.Having("action = 1")

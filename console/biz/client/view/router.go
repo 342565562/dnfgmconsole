@@ -1,6 +1,6 @@
 package view
 
-import "console/mods/ginx"
+import "dnf/mods/ginx"
 
 func InitClientRouter(r *ginx.RouterGroup) {
 	client := r.Group("客户端登录", "")

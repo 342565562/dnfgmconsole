@@ -1,7 +1,7 @@
 package cmds
 
 import (
-	"console/mods/game_db"
+	"dnf/mods/game_db"
 	"flag"
 	"fmt"
 	"github.com/gin-gonic/gin"

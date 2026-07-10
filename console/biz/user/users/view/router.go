@@ -1,8 +1,8 @@
 package view
 
 import (
-	"console/mods/ginx"
-	"console/mods/pathx"
+	"dnf/mods/ginx"
+	"dnf/mods/pathx"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/url"

@@ -1,10 +1,9 @@
 package cmds
 
 import (
-	"console/biz/client/service"
-	"errors"
+	"dnf/biz/client/service"
 	"fmt"
-	"github.com/localhostjason/webserver/db"
+
 	"github.com/localhostjason/webserver/server/config"
 	"github.com/sirupsen/logrus"
 )
@@ -19,32 +18,17 @@ func DumpDefaultConfig() {
 }
 
 func SyncDB() (err error) {
-	if !db.DBEnable() {
-		logrus.Info("no enable sql")
-		return
-	}
-	err = db.Connect()
-	if err != nil {
-		return errors.New(fmt.Sprintf("failed to migrate:%v", err))
-	}
-	err = db.Migrate()
-	if err != nil {
-		return
-	}
-
-	err = db.InitData()
-	return
+	// webserver/db已迁移到game_db，此函数不再使用
+	// 数据库迁移现在通过game_db自动完成
+	logrus.Info("webserver/db已迁移到game_db，数据库迁移通过game_db自动完成")
+	return nil
 }
 
 func AutoMigrate() (err error) {
-	if !db.DBEnable() {
-		return
-	}
-	err = db.Connect()
-	if err != nil {
-		return errors.New(fmt.Sprintf("failed to migrate:%v", err))
-	}
-	return db.Migrate()
+	// webserver/db已迁移到game_db，此函数不再使用
+	// 数据库迁移现在通过game_db自动完成
+	logrus.Info("webserver/db已迁移到game_db，数据库迁移通过game_db自动完成")
+	return nil
 }
 
 func CreatePem() error {

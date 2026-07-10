@@ -1,10 +1,10 @@
 package view
 
 import (
-	"console/biz/gm/model"
-	"console/biz/gm/service"
-	roleService "console/biz/user/role/service"
-	"console/mods/game_db"
+	"dnf/biz/gm/model"
+	"dnf/biz/gm/service"
+	roleService "dnf/biz/user/role/service"
+	"dnf/mods/game_db"
 	"strconv"
 	"strings"
 

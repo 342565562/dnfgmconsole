@@ -1,6 +1,6 @@
 package model
 
-import "console/mods/game_db"
+import "dnf/mods/game_db"
 
 type Accounts struct {
 	Uid         int    `json:"uid" gorm:"column:UID;primaryKey"`

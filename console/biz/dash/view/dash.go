@@ -1,7 +1,7 @@
 package view
 
 import (
-	"console/biz/dash/service"
+	"dnf/biz/dash/service"
 	"github.com/gin-gonic/gin"
 )
 

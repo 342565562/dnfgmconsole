@@ -1,8 +1,10 @@
 package service
 
 import (
-	"console/biz/user/users/model"
-	"github.com/localhostjason/webserver/db"
+	gmModel "dnf/biz/gm/model"
+	"dnf/biz/user/users/model"
+	"dnf/mods/game_db"
+	"errors"
 	uuid "github.com/satori/go.uuid"
 	"time"
 )
@@ -33,19 +35,34 @@ func InitUser() error {
 		},
 	}
 
+	dbx := game_db.DBPools.Get(gmModel.WebServer)
+	if dbx == nil {
+		return errors.New("webserver database not connected")
+	}
+
 	for i := range users {
 		u := &users[i]
 
 		var userList []model.User
-		if db.DB.Limit(1).Where("username = ? ", u.Username).Find(&userList); len(userList) == 0 {
+		if dbx.Limit(1).Where("username = ? ", u.Username).Find(&userList); len(userList) == 0 {
 			u.SetPassword(_defaultPassword)
 			u.JwtKey = uuid.NewV4()
-			db.DB.Create(u)
+			u.IsActivated = true // 初始化时创建的用户默认为已激活（旧用户）
+			dbx.Create(u)
+		} else {
+			// 如果用户已存在，确保IsActivated为true（旧用户免激活）
+			if len(userList) > 0 {
+				existingUser := &userList[0]
+				if !existingUser.IsActivated {
+					existingUser.IsActivated = true
+					dbx.Save(existingUser)
+				}
+			}
 		}
 	}
 	return nil
 }
 
 func init() {
-	db.AddInitHook(InitUser)
+	game_db.AddInitHook(InitUser)
 }

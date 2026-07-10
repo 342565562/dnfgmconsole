@@ -17,9 +17,6 @@ func Connect() error {
 		return err
 	}
 
-	if err := ConnectWithSqliteConfig(c.Sqlite); err != nil {
-		return err
-	}
 	return nil
 }
 

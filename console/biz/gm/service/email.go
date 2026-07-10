@@ -1,8 +1,8 @@
 package service
 
 import (
-	"console/biz/gm/model"
-	"console/mods/game_db"
+	"dnf/biz/gm/model"
+	"dnf/mods/game_db"
 	"time"
 
 	"github.com/localhostjason/webserver/server/util/uv"

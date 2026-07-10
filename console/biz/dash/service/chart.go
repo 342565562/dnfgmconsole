@@ -1,9 +1,10 @@
 package service
 
 import (
-	logModel "console/biz/log/model"
+	"dnf/biz/gm/model"
+	logModel "dnf/biz/log/model"
+	"dnf/mods/game_db"
 	"fmt"
-	"github.com/localhostjason/webserver/db"
 	"time"
 )
 
@@ -15,13 +16,21 @@ func GetDashChart() ChartResult {
 }
 
 func getChartByType(typ string) ChartTranInfo {
+	dbx := game_db.DBPools.Get(model.WebServer)
+	if dbx == nil {
+		return ChartTranInfo{
+			Date:  make([]string, 0),
+			Total: make([]int, 0),
+		}
+	}
+
 	var data []ChartInfo
 
 	now := time.Now()
 	nowYear := now.Format("2006")
 
-	tx := db.DB.Debug().Model(&logModel.RechargeLog{}).
-		Select("sum(number) as total,strftime('%Y',time) as year, strftime('%m',time) AS month").
+	tx := dbx.Model(&logModel.RechargeLog{}).
+		Select("sum(number) as total, DATE_FORMAT(time, '%Y') as year, DATE_FORMAT(time, '%m') AS month").
 		Group("year, month").
 		Having("year = ?", nowYear)
 

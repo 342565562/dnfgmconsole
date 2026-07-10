@@ -1,7 +1,8 @@
 package model
 
 import (
-	"github.com/localhostjason/webserver/db"
+	"dnf/biz/gm/model"
+	"dnf/mods/game_db"
 	"time"
 )
 
@@ -32,5 +33,5 @@ type OperateLog struct {
 }
 
 func init() {
-	db.RegTables(&RechargeLog{}, &OperateLog{})
+	game_db.RegTables(model.WebServer, &RechargeLog{}, &OperateLog{})
 }

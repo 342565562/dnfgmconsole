@@ -1,10 +1,10 @@
 package view
 
 import (
-	gmModel "console/biz/gm/model"
-	"console/biz/user/users/model"
-	"console/biz/user/users/service"
-	"console/mods/game_db"
+	gmModel "dnf/biz/gm/model"
+	"dnf/biz/user/users/model"
+	"dnf/biz/user/users/service"
+	"dnf/mods/game_db"
 	"strings"
 
 	"github.com/gin-gonic/gin"

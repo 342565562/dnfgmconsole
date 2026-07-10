@@ -1,6 +1,6 @@
 package view
 
-import "console/mods/ginx"
+import "dnf/mods/ginx"
 
 func InitRoleRouter(r *ginx.RouterGroup) {
 	r.GET("获取权限", "", getRole)

@@ -1,8 +1,8 @@
 package service
 
 import (
-	gmModel "console/biz/gm/model"
-	"console/mods/game_db"
+	gmModel "dnf/biz/gm/model"
+	"dnf/mods/game_db"
 	"crypto/md5"
 	"encoding/hex"
 	"errors"

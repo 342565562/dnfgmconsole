@@ -1,7 +1,7 @@
 package static
 
 import (
-	"console/mods/pathx"
+	"dnf/mods/pathx"
 	"path/filepath"
 
 	"github.com/gin-gonic/gin"

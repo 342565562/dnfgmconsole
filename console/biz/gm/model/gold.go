@@ -1,7 +1,7 @@
 package model
 
 import (
-	"console/mods/game_db"
+	"dnf/mods/game_db"
 )
 
 type Gold struct {

@@ -1,8 +1,8 @@
 package view
 
 import (
-	"console/biz/user/role/model"
-	"console/biz/user/role/service"
+	"dnf/biz/user/role/model"
+	"dnf/biz/user/role/service"
 	"github.com/gin-gonic/gin"
 	"github.com/localhostjason/webserver/server/util/uv"
 	"strconv"

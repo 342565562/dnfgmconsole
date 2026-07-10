@@ -1,7 +1,7 @@
 package view
 
 import (
-	"console/biz/gm/service"
+	"dnf/biz/gm/service"
 	"github.com/gin-gonic/gin"
 	"github.com/localhostjason/webserver/server/util/uv"
 )

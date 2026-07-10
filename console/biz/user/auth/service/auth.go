@@ -1,17 +1,16 @@
 package service
 
 import (
-	"console/biz/user/auth/model"
-	m "console/biz/user/users/model"
-	gmModel "console/biz/gm/model"
-	"console/mods/game_db"
+	"dnf/biz/user/auth/model"
+	m "dnf/biz/user/users/model"
+	gmModel "dnf/biz/gm/model"
+	"dnf/mods/game_db"
 	"crypto/md5"
 	"encoding/hex"
 	"errors"
 	"fmt"
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
-	"github.com/localhostjason/webserver/db"
 	"github.com/localhostjason/webserver/server/util/uv"
 	uuid "github.com/satori/go.uuid"
 	"gorm.io/gorm"
@@ -42,8 +41,13 @@ func IdHandler(c *gin.Context) interface{} {
 		return nil
 	}
 
+	dbx := game_db.DBPools.Get(gmModel.WebServer)
+	if dbx == nil {
+		return nil
+	}
+
 	var user = &m.User{}
-	err := db.DB.Where("jwt_key = ?", jwtKey).First(user).Error
+	err := dbx.Where("jwt_key = ?", jwtKey).First(user).Error
 	if err != nil {
 		return nil
 	}
@@ -51,8 +55,11 @@ func IdHandler(c *gin.Context) interface{} {
 }
 
 type loginArgs struct {
-	Username string `json:"username" binding:"required,lte=64"`
-	Password string `json:"password" binding:"required,printascii,lte=128"`
+	Username      string `json:"username" binding:"required,lte=64"`
+	Password      string `json:"password" binding:"required,printascii,lte=128"`
+	// ActivationCode 激活码（可选）
+	// 前端发送字段为 activationCode，这里保持一致，避免绑定失败
+	ActivationCode string `json:"activationCode"` 
 }
 
 // ToMd5 MD5加密函数
@@ -70,16 +77,52 @@ func Authenticator(c *gin.Context) (interface{}, error) {
 
 	userName := loginValues.Username
 	password := loginValues.Password
+	activationCode := loginValues.ActivationCode
 
 	c.Set(operateKey, uv.OP(I_OP_LOGIN, userName))
 
 	// 直接记录下来， 不管成功与否， 后面看情况使用
 	c.Set(loginFailedKey, &m.User{Username: userName})
 
+	// 获取webserver数据库连接
+	dbx := game_db.DBPools.Get(gmModel.WebServer)
+	if dbx == nil {
+		return nil, errors.New("数据库连接失败")
+	}
+
 	// 1. 首先尝试默认 users 表登录（支持 admin/123）
 	var user m.User
-	err := db.DB.Where("username = ?", userName).First(&user).Error
+	err := dbx.Where("username = ?", userName).First(&user).Error
 	if err == nil && user.CheckPassword(password) {
+		// 检查用户是否已激活
+		if !user.IsActivated {
+			// 未激活，需要验证激活码
+			if activationCode == "" {
+				return nil, errors.New("该账号未激活，请输入激活码")
+			}
+			
+			// 验证激活码
+			var code m.ActivationCode
+			err := dbx.Where("code = ? AND is_used = ?", activationCode, false).First(&code).Error
+			if err != nil {
+				return nil, errors.New("激活码无效或已被使用")
+			}
+			
+			// 激活用户并绑定激活码
+			now := time.Now()
+			user.IsActivated = true
+			code.IsUsed = true
+			code.UserId = &user.Id
+			code.UsedAt = &now
+			
+			if err := dbx.Save(&user).Error; err != nil {
+				return nil, errors.New("激活失败，请重试")
+			}
+			if err := dbx.Save(&code).Error; err != nil {
+				return nil, errors.New("激活失败，请重试")
+			}
+		}
+		
 		// 默认用户登录成功
 		c.Set(currentUserKey, &user)
 		c.Set(currentPassword, password)
@@ -88,16 +131,16 @@ func Authenticator(c *gin.Context) (interface{}, error) {
 
 	// 2. 如果默认 users 表找不到或密码错误，尝试 d_taiwan.accounts 表
 	if errors.Is(err, gorm.ErrRecordNotFound) || !user.CheckPassword(password) {
-		dbx := game_db.DBPools.Get(gmModel.DTaiwan)
+		gameDbx := game_db.DBPools.Get(gmModel.DTaiwan)
 		var account gmModel.Accounts
-		err := dbx.Where("accountname = ? AND password = ?", userName, ToMd5(password)).First(&account).Error
+		err := gameDbx.Where("accountname = ? AND password = ?", userName, ToMd5(password)).First(&account).Error
 		
 		if err == nil {
 			// accounts 表登录成功，创建或获取对应的 User 记录
 			// 查找是否已存在对应的用户（使用 game_ 前缀避免与现有用户冲突）
 			gameUsername := fmt.Sprintf("game_%s", userName)
 			var gameUser m.User
-			err = db.DB.Where("username = ?", gameUsername).First(&gameUser).Error
+			err = dbx.Where("username = ?", gameUsername).First(&gameUser).Error
 			
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				// 如果不存在，创建新用户记录
@@ -108,16 +151,46 @@ func Authenticator(c *gin.Context) (interface{}, error) {
 					Desc:         fmt.Sprintf("游戏账号: %s (UID: %d)", userName, account.Uid),
 					Time:         time.Now(),
 					IsSuperAdmin: false,
+					IsActivated:  false, // 新用户默认未激活
 					JwtKey:       uuid.NewV4(),
 				}
 				// 设置一个随机密码（实际不会用到，因为验证通过 accounts 表）
 				gameUser.SetPassword(fmt.Sprintf("%s_%d", userName, account.Uid))
-				db.DB.Create(&gameUser)
+				dbx.Create(&gameUser)
 			} else {
 				// 如果已存在，更新最后登录时间
 				now := time.Now()
 				gameUser.LastLoginTime = &now
-				db.DB.Save(&gameUser)
+				dbx.Save(&gameUser)
+			}
+			
+			// 检查游戏账号是否已激活
+			if !gameUser.IsActivated {
+				// 未激活，需要验证激活码
+				if activationCode == "" {
+					return nil, errors.New("该账号未激活，请输入激活码")
+				}
+				
+				// 验证激活码
+				var code m.ActivationCode
+				err := dbx.Where("code = ? AND is_used = ?", activationCode, false).First(&code).Error
+				if err != nil {
+					return nil, errors.New("激活码无效或已被使用")
+				}
+				
+				// 激活用户并绑定激活码
+				now := time.Now()
+				gameUser.IsActivated = true
+				code.IsUsed = true
+				code.UserId = &gameUser.Id
+				code.UsedAt = &now
+				
+				if err := dbx.Save(&gameUser).Error; err != nil {
+					return nil, errors.New("激活失败，请重试")
+				}
+				if err := dbx.Save(&code).Error; err != nil {
+					return nil, errors.New("激活失败，请重试")
+				}
 			}
 			
 			c.Set(currentUserKey, &gameUser)
@@ -193,7 +266,10 @@ func LoginResponse(c *gin.Context, code int, token string, expire time.Time) {
 
 	now := time.Now()
 	user.LastLoginTime = &now
-	db.DB.Save(user)
+	dbx := game_db.DBPools.Get(gmModel.WebServer)
+	if dbx != nil {
+		dbx.Save(user)
+	}
 	c.JSON(http.StatusOK, info)
 }
 

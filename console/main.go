@@ -1,7 +1,7 @@
 package main
 
 import (
-	"console/cmds"
+	"dnf/cmds"
 )
 
 func main() {

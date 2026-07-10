@@ -1,9 +1,9 @@
 package service
 
 import (
-	"console/biz/gm/model"
-	logModel "console/biz/log/model"
-	"console/mods/game_db"
+	"dnf/biz/gm/model"
+	logModel "dnf/biz/log/model"
+	"dnf/mods/game_db"
 	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/localhostjason/webserver/server/util/uv"

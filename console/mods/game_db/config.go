@@ -17,16 +17,9 @@ type MysqlDBConfig struct {
 	Debug           bool   `json:"debug"`
 }
 
-type SqliteDBConfig struct {
-	Key    string `json:"key"`
-	DbFile string `json:"db_file"`
-	Debug  bool   `json:"debug"`
-}
-
 type DbConfig struct {
-	Enable bool             `json:"enable"`
-	Mysql  []MysqlDBConfig  `json:"mysql"`
-	Sqlite []SqliteDBConfig `json:"sqlite"`
+	Enable bool            `json:"enable"`
+	Mysql  []MysqlDBConfig `json:"mysql"`
 }
 
 func init() {
@@ -43,16 +36,9 @@ func init() {
 		Debug:           false,
 	}
 
-	sc := SqliteDBConfig{
-		Key:    "TestSqlite1",
-		DbFile: "data/data.db",
-		Debug:  false,
-	}
-
 	c := DbConfig{
 		Enable: true,
 		Mysql:  []MysqlDBConfig{mc},
-		Sqlite: []SqliteDBConfig{sc},
 	}
 	_ = config.RegConfig(_key, c)
 }

@@ -1,9 +1,9 @@
 package user
 
 import (
-	role "console/biz/user/role/view"
-	users "console/biz/user/users/view"
-	"console/mods/ginx"
+	role "dnf/biz/user/role/view"
+	users "dnf/biz/user/users/view"
+	"dnf/mods/ginx"
 )
 
 func InitUserRouter(g *ginx.RouterGroup) {
