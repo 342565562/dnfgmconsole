@@ -14,12 +14,12 @@
 # ---- 阶段 1：编译前端(Node) ----
 FROM node:18 AS webbuilder
 WORKDIR /web
-# 先装依赖(利用缓存)
-COPY web/package.json web/package-lock.json ./
-RUN npm ci --registry=https://registry.npmmirror.com || npm install --registry=https://registry.npmmirror.com
-# 编译前端 -> /web/dist
+# 拷贝前端源码(.dockerignore 已排除 web/node_modules)
 COPY web/ .
-RUN npm run build
+# 全新安装依赖(npm ci 会先清空 node_modules，确保是干净的 Linux 依赖)
+RUN npm ci --registry=https://registry.npmmirror.com || npm install --registry=https://registry.npmmirror.com
+# 用 node 直接执行入口构建，避免 .bin 可执行位/PATH 问题 -> 产物 /web/dist
+RUN node node_modules/@vue/cli-service/bin/vue-cli-service.js build
 
 # ---- 阶段 2：编译后端(Go) ----
 FROM golang:1.19-alpine AS gobuilder

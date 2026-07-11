@@ -5,6 +5,7 @@
 **/*.log
 # 前端依赖与产物(容器内会重新 npm ci + build)
 web/node_modules
+**/node_modules
 web/dist
 # 后端本地部署产物与二进制(容器内会重新编译)
 console/dist
