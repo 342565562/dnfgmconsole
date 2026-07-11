@@ -46,12 +46,13 @@ Node 阶段编前端 → Go 阶段编后端 → Alpine 运行镜像(约 30–40M
 # 1) 构建
 docker build -t dnfgmconsole:latest .
 
-# 2) 运行(挂载 server.json 便于改配置不重建；映射 8088)
-docker run -d --name gmconsole \
-  -p 8088:8088 \
-  -v $(pwd)/console/config/server.json:/app/config/server.json \
-  --restart unless-stopped \
-  dnfgmconsole:latest
+# 2) 运行(映射 8086 -> 容器 8088，开机自启)
+docker run -d --name gmconsole -p 8086:8088 --restart unless-stopped dnfgmconsole:latest
+
+# (可选)想改配置不重建镜像，可挂载 server.json：
+#   docker run -d --name gmconsole -p 8086:8088 \
+#     -v $(pwd)/console/config/server.json:/app/config/server.json \
+#     --restart unless-stopped dnfgmconsole:latest
 
 # 日志 / 停止 / 删除
 docker logs -f gmconsole
@@ -59,9 +60,9 @@ docker stop gmconsole && docker rm gmconsole
 ```
 
 - 构建上下文 = 项目根目录；`Dockerfile` 自动到 `console/`(后端)、`web/`(前端)取源码。
-- 镜像内：`/app/gmserver`、`/app/config/`、`/app/web/static/`(工作目录 `/app`，端口 8088)。
+- 镜像内：`/app/gmserver`、`/app/config/`、`/app/web/static/`(工作目录 `/app`，容器内端口 8088)。
 - 容器需能连到 `server.json` 里配置的 MySQL(远程库注意网络连通)。
-- 访问：`http://<服务器IP>:8088/`，默认账号 `admin / 123`。
+- 访问：`http://<服务器IP>:8086/`，默认账号 `admin / 123`。
 
 ---
 
@@ -211,6 +212,23 @@ cd console
 go build -ldflags="-H windowsgui" -o gold_import_gui.exe ./tools/gold_import_gui/
 ```
 运行后：可“读取配置”从 server.json 一键填充 → 填连接 → 选装备/道具 CSV → 选模式 → 开始导入(下方显示日志)。
+
+### 7.3 编译工具到项目根目录 & 用法速记
+在 `console` 目录执行，把三个工具编译为 exe 放到项目根目录(Windows)：
+```bash
+cd console
+go build -o ../gold_import.exe ./tools/gold_import/
+go build -ldflags="-H windowsgui" -o ../gold_import_gui.exe ./tools/gold_import_gui/
+go build -o ../gen_codes.exe ./tools/
+```
+
+| 工具 | 说明 | 用法 |
+|------|------|------|
+| `gold_import.exe` | 物品导入 CLI | `gold_import.exe -config console\config\server.json -equip 装备.csv -item 道具.csv -mode truncate -yes` |
+| `gold_import_gui.exe` | 物品导入 图形工具(DNF.ico) | 双击运行 → 读取配置/填连接 → 选装备/道具 CSV → 选模式 → 开始导入 |
+| `gen_codes.exe` | 激活码生成 | `gen_codes.exe -config console\config\server.json`(按提示输入数量) |
+
+> `-mode`：`truncate`(清空重导) / `append`(追加)。这三个是 Windows exe(体积较大)，如不想入库可在 `.gitignore` 加 `*.exe`。
 
 ---
 
